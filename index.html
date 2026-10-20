@@ -94,13 +94,15 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
 <script>
-const API='PASTE_WEB_APP_URL_HERE';   // Apps Script Web App URL (ends with /exec)
+const API='https://script.google.com/macros/s/AKfycbzrSKQgE6PIekWEFPuGEuuqtsAyUVVwQGAaxZKS8MOzbdsSQYXyH08PGrhg0nCwYGVX/exec';   // Apps Script Web App URL (ends with /exec)
 let pin='',pr={},dv='POSTEX',dvMan=0,ords=[];const $=i=>document.getElementById(i);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
 const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
-async function api(a,x){let r;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))})}catch(e){throw new Error('Cannot reach server. Check internet / API URL.')}
- const j=await r.json();if(j.error)throw new Error(j.error);return j}
+async function api(a,x){if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
+ let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server. Check internet / API URL.')}
+ let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page instead of data. Check that the API URL ends with /exec and the Web App access is "Anyone", then redeploy.')}
+ if(j.error)throw new Error(j.error);return j}
 function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/deliver(ed)?$/i.test(s)&&!/out/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
 async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';
  try{const s=await api('state');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}}
