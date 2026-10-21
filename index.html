@@ -25,7 +25,7 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 .t{display:flex;justify-content:space-between;padding:3px 0}.t b{font-size:18px}
 .k{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.k div{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}.k small{color:var(--mu);display:block}.k b{font-size:20px}
 .tb{width:100%;border-collapse:collapse;font-size:13.5px}.tb th{text-align:left;color:var(--mu);font-weight:600;padding:6px;border-bottom:1px solid var(--bd)}.tb td{padding:8px 6px;border-bottom:1px solid var(--bd);vertical-align:top}
-.k4{grid-template-columns:repeat(4,1fr)}@media(max-width:640px){.k4{grid-template-columns:repeat(2,1fr)}}.sc{overflow-x:auto}.cl{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd);font-size:14px}.sm{width:auto!important;padding:3px 9px!important;margin:0!important;font-size:12px!important}.bg{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd);color:var(--tx)}
+.k4{grid-template-columns:repeat(4,1fr)}@media(max-width:640px){.k4{grid-template-columns:repeat(2,1fr)}}.sc{overflow-x:auto}#vits .sh,#bits .sh{display:none}#bits .it>input:nth-child(3),#bits .am{visibility:hidden}.cl{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd);font-size:14px}.sm{width:auto!important;padding:3px 9px!important;margin:0!important;font-size:12px!important}.bg{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd);color:var(--tx)}
 .bg.ok{background:#1a7f3722;color:var(--ok)}.bg.bad{background:#c6282822;color:var(--bad)}.bg.go{background:#1F4E7822;color:var(--pr)}.bg.wn{background:#b26a0022;color:var(--wn)}
 .ok{color:var(--ok)}.bd{color:var(--bad)}.mu{color:var(--mu);font-size:12px}.pg{display:none}.pg.on{display:block}
 #lg{max-width:360px;margin:70px auto}.lw{color:var(--wn);font-size:13px;margin-top:8px}
@@ -56,9 +56,23 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <button class="b" onclick="riderApply()">Apply to selected</button><div id="rm" style="margin-top:8px;font-size:14px"></div></div>
 <div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Open rider parcels</h2><label style="margin:0"><input type="checkbox" id="ra" style="width:auto" onchange="selAll()"> Select all</label></div>
 <table class="tb"><tbody id="rb"></tbody></table></div></div></div>
-<div class="pg" id="p-stock"><div class="g"><div><div class="c"><h2>Add stock (purchase)</h2><label>Product</label><input id="sp" list="spl"><datalist id="spl"></datalist>
-<div class="r"><div><label>Qty</label><input id="sq" type="number" inputmode="numeric"></div><div><label>Cost rate</label><input id="sr" type="number" inputmode="numeric"></div></div><label>Vendor (empty = market cash purchase)</label><input id="sv2" list="vtl"><label>Note</label><input id="sn"><label>Date</label><input id="sd" type="date">
-<button class="b" onclick="stockIn()">Add stock</button></div>
+<div class="pg" id="p-batch"><div class="g"><div>
+<div class="c"><h2>New batch</h2><label>Vendor</label><input id="bnv" list="vtl"><label>Product being made</label><input id="bnp" list="spl">
+<div class="r"><div><label>Planned qty (jars)</label><input id="bnq" type="number" inputmode="numeric"></div><div><label>Date</label><input id="bnd" type="date"></div></div><label>Note</label><input id="bnn">
+<button class="b" onclick="bNew()">Create batch</button></div>
+<div class="c"><h2>Selected batch</h2><input id="bsel" list="btl" placeholder="Tap a batch in the list or type its ID"><datalist id="btl"></datalist>
+<h2 style="margin-top:16px">1. Send materials to vendor</h2><p class="mu">Raw material, jar, label, box &mdash; anything you give the vendor.</p><div id="bits"></div><button class="b s" onclick="addRow('bits',0)">+ Add item</button>
+<label>Date</label><input id="bid" type="date"><button class="b" onclick="bIssue()">Send materials</button>
+<h2 style="margin-top:16px">2. Finished goods received</h2><div class="r"><div><label>Qty received</label><input id="brq" type="number" inputmode="numeric"></div><div><label>Date</label><input id="brd" type="date"></div></div>
+<button class="b" onclick="bReceive()">Add to stock</button>
+<h2 style="margin-top:16px">3. Vendor bill &mdash; closes the batch</h2><label>Bill type</label><select id="bkind" onchange="kindCh()"><option value="MATERIAL">Material bill (kg &times; rate) &mdash; vendor supplied the material</option><option value="LABOUR">Labour / mazduri (pieces &times; rate) &mdash; we gave the material</option></select><div class="r"><div><label>Bill no</label><input id="bbn"></div><div><label>Date</label><input id="bbd" type="date"></div></div>
+<div class="r"><div><label id="bql">Kg</label><input id="bbk" type="number" inputmode="decimal" oninput="calcBB()"></div><div><label id="brl">Rate per kg</label><input id="bbr" type="number" inputmode="decimal" oninput="calcBB()"></div></div>
+<div class="t"><b>Bill amount</b><b id="bbt">0</b></div><button class="b" onclick="bBill()">Save bill &amp; close batch</button></div></div>
+<div><div class="c sc"><h2>Batches</h2><table class="tb"><thead><tr><th>Batch</th><th>Product</th><th>Planned</th><th>Received</th><th>Status</th></tr></thead><tbody id="bbody"></tbody></table></div>
+<div class="c" id="bdet" hidden></div></div></div></div>
+<div class="pg" id="p-stock"><div class="g"><div><div class="c"><h2>Add stock (no vendor bill)</h2><label>Product</label><input id="sp" list="spl"><datalist id="spl"></datalist>
+<div class="r"><div><label>Qty</label><input id="sq" type="number" inputmode="numeric"></div><div><label>Cost rate (optional)</label><input id="sr" type="number" inputmode="numeric"></div></div><label>Vendor (optional, only for your record)</label><input id="sv2" list="vtl"><label>Note</label><input id="sn"><label>Date</label><input id="sd" type="date">
+<label style="display:flex;gap:8px;align-items:center;margin-top:10px;color:var(--tx);font-size:14px"><input id="scash" type="checkbox" style="width:auto"> Paid in cash now (market purchase, needs rate)</label><button class="b" onclick="stockIn()">Add stock</button><p class="mu">Adds stock only. A vendor bill is a separate entry on the Vendors page.</p></div>
 <div class="c"><h2>New product</h2><label>Name</label><input id="np"><div class="r"><div><label>Opening qty</label><input id="no2" type="number" inputmode="numeric"></div><div><label>Cost</label><input id="nc" type="number" inputmode="numeric"></div></div>
 <button class="b s" onclick="addProd()">Create product</button></div></div>
 <div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Current stock</h2><div><input id="sf2" placeholder="Filter" oninput="renderStock()"></div></div><table class="tb"><thead><tr><th>Product</th><th>In stock</th></tr></thead><tbody id="sb"></tbody></table></div></div></div>
@@ -73,6 +87,9 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <div><div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Party balances (they owe us)</h2><div><input id="pf" placeholder="Filter" oninput="renderBals('party')"></div></div><table class="tb"><thead><tr><th>Party</th><th>Balance</th></tr></thead><tbody id="pb"></tbody></table></div>
 <div class="c sc" id="lgr-party" hidden></div></div></div></div>
 <div class="pg" id="p-vendor"><div class="g"><div>
+<div class="c"><h2>Vendor bill (credit)</h2><label>Vendor</label><input id="bv" list="vtl"><div class="r"><div><label>Bill no (optional)</label><input id="bno"></div><div><label>Date</label><input id="bd" type="date"></div></div>
+<label>Bill amount</label><input id="bam" type="number" inputmode="numeric"><label>Note</label><input id="bn2"><button class="b" onclick="vBill()">Save vendor bill</button>
+<p class="mu">Adds to what you owe the vendor. No stock is added here &mdash; add stock separately on the Stock page.</p></div>
 <div class="c"><h2>Pay vendor</h2><label>Vendor</label><input id="vv" list="vtl"><datalist id="vtl"></datalist><div class="r"><div><label>Amount</label><input id="va" type="number" inputmode="numeric"></div><div><label>Date</label><input id="vd" type="date"></div></div>
 <label>Note</label><input id="vn"><button class="b" onclick="vPay()">Record payment</button></div>
 <div class="c"><h2>New vendor</h2><label>Name</label><input id="vnn"><div class="r"><div><label>Opening payable</label><input id="vo" type="number" inputmode="numeric"></div><div><label>Phone</label><input id="vph"></div></div>
@@ -94,10 +111,10 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
 <script>
-const API='https://script.google.com/macros/s/AKfycbzrSKQgE6PIekWEFPuGEuuqtsAyUVVwQGAaxZKS8MOzbdsSQYXyH08PGrhg0nCwYGVX/exec';   // Apps Script Web App URL (ends with /exec)
+const API='PASTE_WEB_APP_URL_HERE';   // Apps Script Web App URL (ends with /exec)
 let pin='',pr={},dv='POSTEX',dvMan=0,ords=[];const $=i=>document.getElementById(i);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
+const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
 const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
 async function api(a,x){if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
  let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server. Check internet / API URL.')}
@@ -108,17 +125,17 @@ async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';
  try{const s=await api('state');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}}
 function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
 function nav(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
- if(p==='orders')loadOrders();if(p==='rider')loadRider();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash()}
+ if(p==='orders')loadOrders();if(p==='rider')loadRider();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()}
 function init(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');
  $('pl').innerHTML=s.products.map(p=>{pr[p.n.toUpperCase()]=p.p;return '<option value="'+esc(p.n)+'">'}).join('');
  $('d').value=s.today;$('f').value=s.today.slice(0,8)+'01';$('e').value=s.today;$('no').value=s.next;$('tk').value=s.taker;$('dc').value=s.dc;
- ['d','pd','vd','cxd','ed','sd'].forEach(k=>$(k).value=s.today);kpi(s.kpi);setDv('POSTEX');resetItems();setRk('ONLINE');addRow('pits',0);addRow('pits',0);loadBals('party');loadBals('vendor');nav('bill')}
+ ['d','pd','vd','bd','bnd','bid','brd','bbd','cxd','ed','sd'].forEach(k=>$(k).value=s.today);kpi(s.kpi);setDv('POSTEX');resetItems();setRk('ONLINE');addRow('pits',0);addRow('pits',0);for(let i=0;i<3;i++)addRow('bits',0);loadStock();loadBals('party');loadBals('vendor');nav('bill')}
 function kpi(k){$('k1').textContent=k.today;$('k2').textContent=k.cod;$('k3').textContent=k.open}
 function setDv(v,man){dv=v;if(man)dvMan=1;['POSTEX','RIDER'].forEach(x=>$('dv-'+x).classList.toggle('on',x===v))}
 function autoDv(){if(!dvMan)setDv(/lahore/i.test($('ci').value)?'RIDER':'POSTEX')}
 function resetItems(){$('its').innerHTML='';for(let i=0;i<3;i++)addRow('its',1);calc()}
-function addRow(box,auto){const r=document.createElement('div');r.className='it';const f=box==='its'?calc:calcP;
- r.innerHTML='<input list="pl" placeholder="Product"><input type="number" inputmode="decimal" value="1"><input type="number" inputmode="numeric" placeholder="Price"><span class="am">0</span><button class="x" title="Remove">&times;</button><label class="sh"><input type="checkbox"> Shop item (not in stock)</label>';
+function addRow(box,auto){const r=document.createElement('div');r.className='it';const f=box==='its'?calc:box==='pits'?calcP:()=>{};const ln=box==='its'||box==='pits'?'pl':'spl';
+ r.innerHTML='<input list="'+ln+'" placeholder="Product"><input type="number" inputmode="decimal" value="1"><input type="number" inputmode="numeric" placeholder="Price"><span class="am">0</span><button class="x" title="Remove">&times;</button><label class="sh"><input type="checkbox"> Shop item (not in stock)</label>';
  const a=r.children;a[0].onchange=()=>{const p=pr[a[0].value.trim().toUpperCase()];if(auto&&p!==undefined&&p!=='')a[2].value=p;f()};
  a[1].oninput=a[2].oninput=f;a[4].onclick=()=>{r.remove();f()};$(box).appendChild(r)}
 function rows(box){return [...$(box||'its').children].map(r=>{const a=r.children;return{p:a[0].value.trim().toUpperCase(),q:+a[1].value,r:+a[2].value,ns:r.querySelector('input[type=checkbox]').checked,el:a[3]}})}
@@ -148,19 +165,22 @@ async function riderApply(){const n=[...document.querySelectorAll('.rc:checked')
  try{const r=await api('riderSet',{orders:n,status:$('rst').value});$('rm').innerHTML='<span class="ok">Updated: '+r.done+'</span>'+(r.skipped.length?'<br><span class="bd">Skipped: '+r.skipped.map(esc).join(', ')+'</span>':'');$('rn').value='';loadRider()}catch(e){alert(e.message)}}
 let stk=[];async function loadStock(){try{stk=(await api('stock')).rows;$('spl').innerHTML=stk.map(x=>'<option value="'+esc(x.n)+'">').join('');renderStock()}catch(e){alert(e.message)}}
 function renderStock(){const f=$('sf2').value.toLowerCase();$('sb').innerHTML=stk.filter(x=>String(x.n).toLowerCase().includes(f)).map(x=>'<tr><td>'+esc(x.n)+'</td><td><span class="bg '+(x.stock<=0?'bad':x.stock<=5?'wn':'ok')+'">'+x.stock+'</span></td></tr>').join('')}
-async function stockIn(){try{await api('stockIn',{product:$('sp').value,qty:$('sq').value,rate:$('sr').value,vendor:$('sv2').value,note:$('sn').value,date:$('sd').value});['sp','sq','sr','sn','sv2'].forEach(k=>$(k).value='');loadStock()}catch(e){alert(e.message)}}
+async function stockIn(){try{await api('stockIn',{product:$('sp').value,qty:$('sq').value,rate:$('sr').value,vendor:$('sv2').value,cash:$('scash').checked,note:$('sn').value,date:$('sd').value});['sp','sq','sr','sn','sv2'].forEach(k=>$(k).value='');$('scash').checked=false;loadStock()}catch(e){alert(e.message)}}
 async function addProd(){try{await api('addProduct',{name:$('np').value,opening:$('no2').value,cost:$('nc').value});['np','no2','nc'].forEach(k=>$(k).value='');loadStock()}catch(e){alert(e.message)}}
 async function dl(){$('dl').disabled=true;$('dl').textContent='Preparing...';
  try{const r=await api('export',{from:$('f').value,to:$('e').value});const a=document.createElement('a');a.href='data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'+r.b64;a.download=r.name;document.body.appendChild(a);a.click();a.remove()}catch(e){alert(e.message)}
  $('dl').disabled=false;$('dl').textContent='Download Excel'}
 
 async function loadBals(t){try{bals[t]=(await api(t==='party'?'parties':'vendors')).rows;const k=t==='party'?'ptl':'vtl';$(k).innerHTML=bals[t].map(x=>'<option value="'+esc(x.n)+'">').join('');renderBals(t)}catch(e){alert(e.message)}}
-function renderBals(t){const id=t==='party'?'pf':'vf',f=$(id).value.toLowerCase();$(t==='party'?'pb':'vb').innerHTML=bals[t].filter(x=>x.n.toLowerCase().includes(f)).map(x=>'<tr style="cursor:pointer" data-n="'+esc(x.n)+'" onclick="openLedger(\''+t+'\',this.dataset.n)"><td>'+esc(x.n)+'</td><td><b class="'+(x.bal>0?(t==='party'?'bd':'wn'):'ok')+'">'+money(x.bal)+'</b></td></tr>').join('')||'<tr><td class="mu">None yet.</td></tr>'}
+function renderBals(t){const id=t==='party'?'pf':'vf',f=$(id).value.toLowerCase();$(t==='party'?'pb':'vb').innerHTML=bals[t].filter(x=>x.n.toLowerCase().includes(f)).map(x=>'<tr style="cursor:pointer" data-n="'+esc(x.n)+'" onclick="openLedger(\''+t+'\',this.dataset.n)"><td>'+esc(x.n)+'</td><td><b class="'+(x.bal>0?(t==='party'?'bd':'wn'):'ok')+'">'+money(x.bal)+'</b></td>'+'</tr>').join('')||'<tr><td class="mu">None yet.</td></tr>'}
 async function openLedger(t,n){try{const r=await api('ledger',{t,name:n});const b=$('lgr-'+t);b.hidden=false;
  b.innerHTML='<h2>'+esc(n)+' &mdash; '+(t==='party'?'balance receivable':'payable')+': '+money(r.bal)+'</h2><table class="tb"><thead><tr><th>Date</th><th>Detail</th><th>'+(t==='party'?'Debit':'Paid')+'</th><th>'+(t==='party'?'Credit':'Purchase')+'</th><th>Balance</th></tr></thead><tbody>'+
- r.rows.map(x=>'<tr><td>'+esc(x.d)+'</td><td>'+esc(x.t)+(x.id?' <button class="b s sm" data-id="'+esc(x.id)+'" onclick="cancelBill(this.dataset.id)">Cancel</button>':'')+'</td><td>'+(t==='party'?money(x.dr):money(x.dr))+'</td><td>'+money(x.cr)+'</td><td><b>'+money(x.bal)+'</b></td></tr>').join('')+'</tbody></table>';
+ r.rows.map(x=>'<tr><td>'+esc(x.d)+'</td><td>'+esc(x.t)+(x.id?' <button class="b s sm" data-id="'+esc(x.id)+'" data-v="'+esc(n)+'" onclick="'+(t==='party'?'cancelBill(this.dataset.id)">Cancel':'delVBill(this.dataset.id,this.dataset.v)">Delete')+'</button>':'')+'</td><td>'+(t==='party'?money(x.dr):money(x.dr))+'</td><td>'+money(x.cr)+'</td><td><b>'+money(x.bal)+'</b></td></tr>').join('')+'</tbody></table>';
  b.scrollIntoView({behavior:'smooth'})}catch(e){alert(e.message)}}
 async function cancelBill(id){if(!confirm('Cancel bill '+id+'? Stock will be returned.'))return;try{await api('cancelBill',{id});loadBals('party');$('lgr-party').hidden=true}catch(e){alert(e.message)}}
+async function vBill(){try{const r=await api('vendorBill',{vendor:$('bv').value,billNo:$('bno').value,date:$('bd').value,amount:$('bam').value,note:$('bn2').value});
+ alert('Bill saved ('+money(r.total)+'). Vendor payable now: '+money(r.bal));['bv','bno','bam','bn2'].forEach(k=>$(k).value='');loadBals('vendor')}catch(e){alert(e.message)}}
+async function delVBill(id,v){if(!confirm('Delete bill '+id+' of '+v+'?'))return;try{await api('delVendorBill',{vendor:v,billNo:id});loadBals('vendor');openLedger('vendor',v)}catch(e){alert(e.message)}}
 async function pBill(){const it=rows('pits').filter(i=>i.p&&i.q>0);if(!$('pp').value||!it.length){alert('Select a party and add at least one item.');return}
  try{const r=await api('partyBill',{party:$('pp').value,date:$('pd').value,paid:$('pa').value,items:it.map(i=>({p:i.p,q:i.q,r:i.r,ns:i.ns}))});
   $('pr').innerHTML='<span class="ok">&#10003; Bill '+r.id+' saved</span><br>Previous balance: '+money(r.prev)+' | Bill: '+money(r.total)+' | Paid: '+money(r.paid)+'<br><b>New balance: '+money(r.bal)+'</b>'+(r.warn.length?'<div class="lw">Low stock: '+r.warn.map(esc).join('; ')+'</div>':'');
@@ -178,5 +198,25 @@ async function loadCash(){try{const c=await api('cash');$('c1').textContent=mone
 async function addExp(){try{await api('expense',{cat:$('ec').value,amount:$('ea').value,date:$('ed').value,note:$('et').value});['ec','ea','et'].forEach(k=>$(k).value='');loadCash()}catch(e){alert(e.message)}}
 async function delExp(id){if(confirm('Delete this expense?')){try{await api('delExpense',{id});loadCash()}catch(e){alert(e.message)}}}
 async function setOc(){try{await api('setCash',{amount:$('oc').value});loadCash()}catch(e){alert(e.message)}}
+
+let bts=[];
+async function loadBatches(){try{const [r,s]=await Promise.all([api('batches'),api('stock')]);bts=r.rows;$('spl').innerHTML=s.rows.map(x=>'<option value="'+esc(x.n)+'">').join('');
+ $('btl').innerHTML=bts.filter(x=>x.status==='OPEN').map(x=>'<option value="'+esc(x.id)+'" label="'+esc(x.product+' - '+x.vendor)+'">').join('');
+ $('bbody').innerHTML=bts.map(x=>'<tr style="cursor:pointer" data-id="'+esc(x.id)+'" onclick="pickBatch(this.dataset.id)"><td><b>'+esc(x.id)+'</b><br><span class="mu">'+esc(x.date)+'</span></td><td>'+esc(x.product)+'<br><span class="mu">'+esc(x.vendor)+'</span></td><td>'+x.planned+'</td><td>'+x.received+'</td><td>'+(x.status==='OPEN'?'<span class="bg wn">Pending '+Math.max(x.planned-x.received,0)+'</span>':'<span class="bg ok">Closed</span>')+'</td></tr>').join('')||'<tr><td class="mu">No batches yet.</td></tr>'}catch(e){alert(e.message)}}
+async function pickBatch(id){$('bsel').value=id;const x=bts.find(b=>b.id===id);if(!x)return;try{const d=await api('batchDetail',{id});const b=$('bdet');b.hidden=false;
+ b.innerHTML='<h2>'+esc(x.id)+' &mdash; '+esc(x.product)+' ('+esc(x.vendor)+')</h2><div class="cl"><span>Planned / received</span><b>'+x.planned+' / '+x.received+'</b></div><div class="cl"><span>Materials &amp; packaging sent</span><b>'+money(x.pack)+'</b></div>'+
+ (x.status==='CLOSED'?'<div class="cl"><span>'+(x.kind==='LABOUR'?'Labour bill ':'Material bill ')+esc(x.billNo)+'</span><b>'+money(x.bill)+'</b></div><div class="cl"><span><b>Cost per piece</b></span><b class="ok">'+money(x.unit)+'</b></div>':'<p class="mu">Cost per piece is worked out when the vendor bill is saved.</p>')+
+ '<h2 style="margin-top:12px">Materials sent</h2>'+(d.issues.map(i=>'<div class="cl"><span>'+esc(i.date)+' &middot; '+esc(i.item)+' x '+i.qty+'</span><b>'+money(i.amt)+'</b></div>').join('')||'<div class="mu">Nothing sent yet.</div>')+
+ '<h2 style="margin-top:12px">Received</h2>'+(d.receipts.map(i=>'<div class="cl"><span>'+esc(i.date)+'</span><b>'+i.qty+'</b></div>').join('')||'<div class="mu">Nothing received yet.</div>')}catch(e){alert(e.message)}}
+async function bNew(){try{const r=await api('batchNew',{vendor:$('bnv').value,product:$('bnp').value,planned:$('bnq').value,date:$('bnd').value,note:$('bnn').value});['bnv','bnp','bnq','bnn'].forEach(k=>$(k).value='');await loadBatches();pickBatch(r.id)}catch(e){alert(e.message)}}
+async function bIssue(){const it=rows('bits').filter(i=>i.p&&i.q>0);try{const r=await api('batchIssue',{id:$('bsel').value,date:$('bid').value,items:it.map(i=>({p:i.p,q:i.q}))});
+ alert('Materials sent. Cost: '+money(r.packCost)+(r.warn.length?'\nLow stock: '+r.warn.join('; '):'')+(r.noCost.length?'\nNo cost price set for: '+r.noCost.join(', ')+' (set it in Products so the batch cost is correct)':''));
+ $('bits').innerHTML='';for(let i=0;i<3;i++)addRow('bits',0);const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
+async function bReceive(){try{await api('batchReceive',{id:$('bsel').value,qty:$('brq').value,date:$('brd').value});$('brq').value='';const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
+function kindCh(){const l=$('bkind').value==='LABOUR';$('bql').textContent=l?'Pieces':'Kg';$('brl').textContent=l?'Rate per piece':'Rate per kg';if(l&&!$('bbk').value){const x=bts.find(b=>b.id===$('bsel').value);if(x)$('bbk').value=x.received}calcBB()}
+function calcBB(){$('bbt').textContent=money((+$('bbk').value||0)*(+$('bbr').value||0))}
+async function bBill(){if(!confirm('Save the bill and close this batch?'))return;try{const r=await api('batchBill',{id:$('bsel').value,billNo:$('bbn').value,qty:$('bbk').value,kind:$('bkind').value,rate:$('bbr').value,date:$('bbd').value});
+ alert('Batch closed.\n'+(r.kind==='LABOUR'?'Labour bill ':'Material bill ')+money(r.amount)+' + materials sent '+money(r.pack)+' over '+r.received+' pieces = '+money(r.unit)+' per piece.\nCost price updated in Products.'+(r.received!==r.planned?'\nNote: planned was '+r.planned+', received '+r.received+'.':''));
+ ['bbn','bbk','bbr'].forEach(k=>$(k).value='');calcBB();const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
 </script></body></html>
