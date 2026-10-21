@@ -111,7 +111,7 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
 <script>
-const API='PASTE_WEB_APP_URL_HERE';   // Apps Script Web App URL (ends with /exec)
+const API='https://script.google.com/macros/s/AKfycbzrSKQgE6PIekWEFPuGEuuqtsAyUVVwQGAaxZKS8MOzbdsSQYXyH08PGrhg0nCwYGVX/exec';   // Apps Script Web App URL (ends with /exec)
 let pin='',pr={},dv='POSTEX',dvMan=0,ords=[];const $=i=>document.getElementById(i);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
