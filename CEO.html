@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Royal CEO</title>
+<style>
+:root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}
+@media(prefers-color-scheme:dark){:root{--bg:#11151b;--cd:#1b212a;--tx:#e8ecf2;--mu:#97a2b3;--pr:#4f8fcb;--ok:#4caf50;--bad:#ef7070;--wn:#e0a040;--bd:#313a47}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px system-ui,sans-serif}
+header{background:var(--pr);color:#fff;display:flex;align-items:center;gap:18px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+header b{font-size:18px;margin-right:auto}nav{display:flex;gap:4px;overflow-x:auto;max-width:70vw}
+nav button{white-space:nowrap;flex:none}nav button,.lo{background:transparent;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;width:auto;margin:0}
+nav button.on{background:rgba(255,255,255,.22)}
+@media(max-width:760px){header{padding-bottom:8px}nav{max-width:none;position:fixed;left:0;right:0;bottom:0;background:var(--pr);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;z-index:5}nav button{padding:8px 6px;font-size:12px}main{padding-bottom:84px!important}}
+main{max-width:1150px;margin:auto;padding:14px}
+.g{display:grid;gap:14px}@media(min-width:900px){.g{grid-template-columns:360px 1fr;align-items:start}}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px}.g .c:last-child{margin-bottom:0}
+h2{margin:0 0 8px;font-size:16px}label{font-size:12px;color:var(--mu);display:block;margin:9px 0 3px}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.r{display:flex;gap:8px}.r>div{flex:1;min-width:0}
+button.b{background:var(--pr);color:#fff;border:0;border-radius:9px;padding:11px 14px;font-size:15px;font-weight:600;width:100%;margin-top:10px;cursor:pointer}
+button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}button:disabled{opacity:.5}
+.seg{display:flex;gap:6px;margin-top:4px}.seg button{flex:1;padding:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:8px;cursor:pointer}.seg button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.it{display:grid;grid-template-columns:1fr 60px 84px 74px 28px;gap:6px;align-items:center;margin-bottom:4px}
+.it .am{text-align:right;color:var(--mu);font-size:13px}.it .x{background:none;border:0;color:var(--bad);font-size:20px;cursor:pointer}
+.it .sh{grid-column:1/-1;margin:0 0 8px;font-size:12px;display:flex;gap:6px;align-items:center}.it .sh input{width:auto}
+@media(max-width:520px){.it{grid-template-columns:1fr 54px 72px 62px 24px}}
+.t{display:flex;justify-content:space-between;padding:3px 0}.t b{font-size:18px}
+.k{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.k div{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}.k small{color:var(--mu);display:block}.k b{font-size:20px}
+.tb{width:100%;border-collapse:collapse;font-size:13.5px}.tb th{text-align:left;color:var(--mu);font-weight:600;padding:6px;border-bottom:1px solid var(--bd)}.tb td{padding:8px 6px;border-bottom:1px solid var(--bd);vertical-align:top}
+.k4{grid-template-columns:repeat(4,1fr)}@media(max-width:640px){.k4{grid-template-columns:repeat(2,1fr)}}.sc{overflow-x:auto}#vits .sh,.w,.sm,#sy,#bw,#p-orders .k{display:none!important}@media(min-width:900px){.g{grid-template-columns:1fr!important}}#vits .sh,#bits .sh{display:none}#bits .it>input:nth-child(3),#bits .am{visibility:hidden}.cl{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd);font-size:14px}.sm{width:auto!important;padding:3px 9px!important;margin:0!important;font-size:12px!important}.bg{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd);color:var(--tx)}
+.bg.ok{background:#1a7f3722;color:var(--ok)}.bg.bad{background:#c6282822;color:var(--bad)}.bg.go{background:#1F4E7822;color:var(--pr)}.bg.wn{background:#b26a0022;color:var(--wn)}
+.ok{color:var(--ok)}.bd{color:var(--bad)}.mu{color:var(--mu);font-size:12px}.pg{display:none}.pg.on{display:block}
+#lg{max-width:360px;margin:70px auto}.lw{color:var(--wn);font-size:13px;margin-top:8px}
+</style></head><body>
+<div id="lg" class="c"><h2>Royal CEO</h2><label>PIN</label><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()">
+<button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
+<div id="ap" hidden>
+<header><b>Royal CEO (view only)</b><nav id="nv"></nav><button class="lo" onclick="logout()">Log out</button></header>
+<main>
+<div class="pg" id="p-ov"><div class="k k4"><div><small>Cash in hand</small><b id="o1">0</b></div><div><small>Parties owe us</small><b id="o2">0</b></div><div><small>We owe vendors</small><b id="o3">0</b></div><div><small>Month cash in / out</small><b id="o4">0</b></div></div>
+<div class="k k4"><div><small>Orders today</small><b id="o5">0</b></div><div><small>COD today</small><b id="o6">0</b></div><div><small>Orders this month</small><b id="o7">0</b></div><div><small>COD this month</small><b id="o8">0</b></div></div>
+<div class="g"><div class="c"><h2>Order status (this month)</h2><div id="o9"></div></div><div class="c"><h2>Low stock (5 or less)</h2><div id="o10"></div></div></div></div>
+<div class="pg" id="p-orders"><div class="k"><div><small>Orders today</small><b id="k1">0</b></div><div><small>COD today (Rs)</small><b id="k2">0</b></div><div><small>Open parcels</small><b id="k3">0</b></div></div>
+<div class="c"><div class="r"><div style="flex:3"><input id="q" placeholder="Search order no, phone, tracking or name" onkeydown="if(event.key==='Enter')loadOrders()"></div><div><select id="sf" onchange="renderOrders()"><option value="">All status</option></select></div></div>
+<div class="r"><button class="b" onclick="loadOrders()">Search</button><button class="b s" id="sy" onclick="syncNow()">Sync PostEx now</button></div><div id="sm" class="mu" style="margin-top:6px"></div></div>
+<div class="c sc"><table class="tb"><thead><tr><th>Order</th><th>Customer</th><th>City</th><th>COD</th><th>Status</th><th>Tracking</th></tr></thead><tbody id="ob"></tbody></table></div></div>
+<div class="pg" id="p-batch"><div class="g"><div>
+<div class="c w"><h2>New batch</h2><label>Vendor</label><input id="bnv" list="vtl"><label>Product being made</label><input id="bnp" list="spl">
+<div class="r"><div><label>Planned qty (jars)</label><input id="bnq" type="number" inputmode="numeric"></div><div><label>Date</label><input id="bnd" type="date"></div></div><label>Note</label><input id="bnn">
+<button class="b" onclick="bNew()">Create batch</button></div>
+<div class="c w"><h2>Selected batch</h2><input id="bsel" list="btl" placeholder="Tap a batch in the list or type its ID"><datalist id="btl"></datalist>
+<h2 style="margin-top:16px">1. Send materials to vendor</h2><p class="mu">Raw material, jar, label, box &mdash; anything you give the vendor.</p><div id="bits"></div><button class="b s" onclick="addRow('bits',0)">+ Add item</button>
+<label>Date</label><input id="bid" type="date"><button class="b" onclick="bIssue()">Send materials</button>
+<h2 style="margin-top:16px">2. Finished goods received</h2><div class="r"><div><label>Qty received</label><input id="brq" type="number" inputmode="numeric"></div><div><label>Date</label><input id="brd" type="date"></div></div>
+<button class="b" onclick="bReceive()">Add to stock</button>
+<h2 style="margin-top:16px">3. Vendor bill &mdash; closes the batch</h2><label>Bill type</label><select id="bkind" onchange="kindCh()"><option value="MATERIAL">Material bill (kg &times; rate) &mdash; vendor supplied the material</option><option value="LABOUR">Labour / mazduri (pieces &times; rate) &mdash; we gave the material</option></select><div class="r"><div><label>Bill no</label><input id="bbn"></div><div><label>Date</label><input id="bbd" type="date"></div></div>
+<div class="r"><div><label id="bql">Kg</label><input id="bbk" type="number" inputmode="decimal" oninput="calcBB()"></div><div><label id="brl">Rate per kg</label><input id="bbr" type="number" inputmode="decimal" oninput="calcBB()"></div></div>
+<div class="t"><b>Bill amount</b><b id="bbt">0</b></div><button class="b" onclick="bBill()">Save bill &amp; close batch</button></div></div>
+<div><div class="c sc"><h2>Batches</h2><table class="tb"><thead><tr><th>Batch</th><th>Product</th><th>Planned</th><th>Received</th><th>Status</th></tr></thead><tbody id="bbody"></tbody></table></div>
+<div class="c" id="bdet" hidden></div></div></div></div>
+<div class="pg" id="p-stock"><div class="g"><div><div class="c w"><h2>Add stock (no vendor bill)</h2><label>Product</label><input id="sp" list="spl"><datalist id="spl"></datalist>
+<div class="r"><div><label>Qty</label><input id="sq" type="number" inputmode="numeric"></div><div><label>Cost rate (optional)</label><input id="sr" type="number" inputmode="numeric"></div></div><label>Vendor (optional, only for your record)</label><input id="sv2" list="vtl"><label>Note</label><input id="sn"><label>Date</label><input id="sd" type="date">
+<label style="display:flex;gap:8px;align-items:center;margin-top:10px;color:var(--tx);font-size:14px"><input id="scash" type="checkbox" style="width:auto"> Paid in cash now (market purchase, needs rate)</label><button class="b" onclick="stockIn()">Add stock</button><p class="mu">Adds stock only. A vendor bill is a separate entry on the Vendors page.</p></div>
+<div class="c w"><h2>New product</h2><label>Name</label><input id="np"><div class="r"><div><label>Opening qty</label><input id="no2" type="number" inputmode="numeric"></div><div><label>Cost</label><input id="nc" type="number" inputmode="numeric"></div></div>
+<button class="b s" onclick="addProd()">Create product</button></div></div>
+<div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Current stock</h2><div><input id="sf2" placeholder="Filter" oninput="renderStock()"></div></div><table class="tb"><thead><tr><th>Product</th><th>In stock</th></tr></thead><tbody id="sb"></tbody></table></div></div></div>
+
+<div class="pg" id="p-party"><div class="g"><div>
+<div class="c w"><h2>Wholesale bill</h2><label>Party</label><input id="pp" list="ptl"><datalist id="ptl"></datalist><label>Date</label><input id="pd" type="date">
+<div id="pits" style="margin-top:8px"></div><button class="b s" onclick="addRow('pits',0)">+ Add item</button>
+<div class="r"><div><label>Paid now (cash)</label><input id="pa" type="number" inputmode="numeric"></div><div><label>Bill total</label><input id="ps1" readonly value="0"></div></div>
+<button class="b" onclick="pBill()">Save wholesale bill</button><div id="pr" style="margin-top:8px;font-size:14px"></div></div>
+<div class="c w"><h2>New party</h2><label>Name</label><input id="pn"><div class="r"><div><label>Opening balance</label><input id="po" type="number" inputmode="numeric"></div><div><label>Phone</label><input id="pph"></div></div>
+<button class="b s" onclick="addNamed('addParty','pn','po','pph')">Create party</button></div></div>
+<div><div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Party balances (they owe us)</h2><div><input id="pf" placeholder="Filter" oninput="renderBals('party')"></div></div><table class="tb"><thead><tr><th>Party</th><th>Balance</th></tr></thead><tbody id="pb"></tbody></table></div>
+<div class="c sc" id="lgr-party" hidden></div></div></div></div>
+<div class="pg" id="p-vendor"><div class="g"><div>
+<div class="c w"><h2>Vendor bill (credit)</h2><label>Vendor</label><input id="bv" list="vtl"><div class="r"><div><label>Bill no (optional)</label><input id="bno"></div><div><label>Date</label><input id="bd" type="date"></div></div>
+<label>Bill amount</label><input id="bam" type="number" inputmode="numeric"><label>Note</label><input id="bn2"><button class="b" onclick="vBill()">Save vendor bill</button>
+<p class="mu">Adds to what you owe the vendor. No stock is added here &mdash; add stock separately on the Stock page.</p></div>
+<div class="c w"><h2>Pay vendor</h2><label>Vendor</label><input id="vv" list="vtl"><datalist id="vtl"></datalist><div class="r"><div><label>Amount</label><input id="va" type="number" inputmode="numeric"></div><div><label>Date</label><input id="vd" type="date"></div></div>
+<label>Note</label><input id="vn"><button class="b" onclick="vPay()">Record payment</button></div>
+<div class="c w"><h2>New vendor</h2><label>Name</label><input id="vnn"><div class="r"><div><label>Opening payable</label><input id="vo" type="number" inputmode="numeric"></div><div><label>Phone</label><input id="vph"></div></div>
+<button class="b s" onclick="addNamed('addVendor','vnn','vo','vph')">Create vendor</button><p class="mu">Purchases are added from the Stock page (choose the vendor there).</p></div></div>
+<div><div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Vendor balances (we owe them)</h2><div><input id="vf" placeholder="Filter" oninput="renderBals('vendor')"></div></div><table class="tb"><thead><tr><th>Vendor</th><th>Payable</th></tr></thead><tbody id="vb"></tbody></table></div>
+<div class="c sc" id="lgr-vendor" hidden></div></div></div></div>
+<div class="pg" id="p-cash"><div class="k k4"><div><small>Cash in hand</small><b id="c1">0</b></div><div><small>Today in / out</small><b id="c2">0</b></div><div><small>Month in</small><b id="c3">0</b></div><div><small>Month out</small><b id="c4">0</b></div></div>
+<div class="g"><div>
+<div class="c w"><h2>Receive payment</h2><div class="seg"><button id="rk-ONLINE" onclick="setRk('ONLINE')">Online weekly payment</button><button id="rk-PARTY" onclick="setRk('PARTY')">Party payment</button></div>
+<label id="cxl">Source</label><input id="cxn"><div class="r"><div><label>Amount</label><input id="cxa" type="number" inputmode="numeric"></div><div><label>Date</label><input id="cxd" type="date"></div></div>
+<label>Note</label><input id="cxt"><button class="b" onclick="recv()">Record payment</button><div id="cxm" style="margin-top:8px;font-size:14px"></div></div>
+<div class="c w"><h2>Add expense</h2><label>Category</label><input id="ec" list="ctl"><datalist id="ctl"></datalist><div class="r"><div><label>Amount</label><input id="ea" type="number" inputmode="numeric"></div><div><label>Date</label><input id="ed" type="date"></div></div>
+<label>Note</label><input id="et"><button class="b" onclick="addExp()">Add expense</button></div>
+<div class="c w"><h2>Opening cash</h2><label>Cash in hand on the start date</label><input id="oc" type="number" inputmode="numeric"><label>Cash tracking starts from</label><input id="ocd" type="date"><button class="b s" onclick="setOc()">Save</button><p class="mu">Anything dated before this day (old vendor payments, expenses, receipts) stays in its ledger but does not change cash in hand.</p></div></div>
+<div><div class="c"><h2>This month</h2><div class="r"><div><b class="ok">Cash in</b><div id="cbi"></div></div><div><b class="bd">Cash out</b><div id="cbo"></div></div></div></div>
+<div class="c sc"><h2>Recent expenses</h2><table class="tb"><tbody id="cel"></tbody></table></div>
+<div class="c sc"><h2>Recent payments received</h2><table class="tb"><tbody id="cpl"></tbody></table></div></div></div></div>
+<div class="pg" id="p-rep"><div class="c" style="max-width:520px"><h2>Excel download</h2><div class="r"><div><label>From</label><input id="f" type="date"></div><div><label>To</label><input id="e" type="date"></div></div>
+<button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
+</main></div>
+<script src="../config.js"></script>
+<script>
+let pin='',pr={},dv='POSTEX',dvMan=0,ords=[];const $=i=>document.getElementById(i);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const PG=[['ov','Overview'],['orders','Orders'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
+const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
+async function api(a,x){if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
+ let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server. Check internet / API URL.')}
+ let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page instead of data. Check that the API URL ends with /exec and the Web App access is "Anyone", then redeploy.')}
+ if(j.error)throw new Error(j.error);return j}
+function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/deliver(ed)?$/i.test(s)&&!/out/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
+async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';
+ try{const s=await api('state');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}}
+function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
+function nav(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
+ if(p==='orders')loadOrders();if(p==='rider')loadRider();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()}
+function init(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');
+ $('pl').innerHTML=s.products.map(p=>{pr[p.n.toUpperCase()]=p.p;return '<option value="'+esc(p.n)+'">'}).join('');
+ $('d').value=s.today;$('f').value=s.today.slice(0,8)+'01';$('e').value=s.today;$('no').value=s.next;$('tk').value=s.taker;$('dc').value=s.dc;
+ ['d','pd','vd','bd','bnd','bid','brd','bbd','cxd','ed','sd'].forEach(k=>$(k).value=s.today);kpi(s.kpi);setDv('POSTEX');resetItems();setRk('ONLINE');addRow('pits',0);addRow('pits',0);for(let i=0;i<3;i++)addRow('bits',0);loadStock();loadBals('party');loadBals('vendor');nav('bill')}
+function kpi(k){$('k1').textContent=k.today;$('k2').textContent=k.cod;$('k3').textContent=k.open}
+function setDv(v,man){dv=v;if(man)dvMan=1;['POSTEX','RIDER'].forEach(x=>$('dv-'+x).classList.toggle('on',x===v))}
+function autoDv(){if(!dvMan)setDv(/lahore/i.test($('ci').value)?'RIDER':'POSTEX')}
+function resetItems(){$('its').innerHTML='';for(let i=0;i<3;i++)addRow('its',1);calc()}
+function addRow(box,auto){const r=document.createElement('div');r.className='it';const f=box==='its'?calc:box==='pits'?calcP:()=>{};const ln=box==='its'||box==='pits'?'pl':'spl';
+ r.innerHTML='<input list="'+ln+'" placeholder="Product"><input type="number" inputmode="decimal" value="1"><input type="number" inputmode="numeric" placeholder="Price"><span class="am">0</span><button class="x" title="Remove">&times;</button><label class="sh"><input type="checkbox"> Shop item (not in stock)</label>';
+ const a=r.children;a[0].onchange=()=>{const p=pr[a[0].value.trim().toUpperCase()];if(auto&&p!==undefined&&p!=='')a[2].value=p;f()};
+ a[1].oninput=a[2].oninput=f;a[4].onclick=()=>{r.remove();f()};$(box).appendChild(r)}
+function rows(box){return [...$(box||'its').children].map(r=>{const a=r.children;return{p:a[0].value.trim().toUpperCase(),q:+a[1].value,r:+a[2].value,ns:r.querySelector('input[type=checkbox]').checked,el:a[3]}})}
+function calcBox(box){let t=0;rows(box).forEach(i=>{const v=i.p&&i.q>0?i.q*i.r:0;i.el.textContent=v;t+=v});return t}
+function calc(){const t=calcBox('its'),dc=+$('dc').value||0,av=+$('av').value||0;$('s1').textContent=t;$('s3').textContent=dc;$('s4').textContent=av;$('s2').textContent=t+dc-av}
+function calcP(){$('ps1').value=calcBox('pits')}
+async function save(){const it=rows('its').filter(i=>i.p&&i.q>0);
+ if(!$('no').value||!it.length){alert('Enter the order no and at least one item.');return}
+ if(it.some(i=>!(i.r>0))&&!confirm('An item has no price. Save anyway?'))return;
+ $('sv').disabled=true;
+ const o={date:$('d').value,orderNo:$('no').value,taker:$('tk').value.trim().toUpperCase(),city:$('ci').value.trim().toUpperCase(),name:$('nm').value.trim().toUpperCase(),number:$('ph').value.trim(),
+  address:$('ad').value.trim().toUpperCase(),dc:$('dc').value,adv:$('av').value,delivery:dv,items:it.map(i=>({p:i.p,q:i.q,r:i.r,ns:i.ns}))};
+ try{const r=await api('save',{o});$('rs').hidden=false;
+  $('m').innerHTML='<span class="ok">&#10003; Order #'+r.orderNo+' saved</span> (payable Rs '+r.payable+')'+(r.warn.length?'<div class="lw">Low stock: '+r.warn.map(esc).join('; ')+'</div>':'');
+  $('no').value=r.next;['ci','nm','ph','ad','av'].forEach(k=>$(k).value='');dvMan=0;setDv('POSTEX');resetItems()}
+ catch(e){alert(e.message)}$('sv').disabled=false}
+async function loadOrders(){try{const [s,r]=await Promise.all([api('state'),api('search',{q:$('q').value})]);kpi(s.kpi);ords=r.rows;
+ const st=[...new Set(ords.map(x=>x.status||''))].filter(Boolean).sort();$('sf').innerHTML='<option value="">All status</option>'+st.map(x=>'<option>'+esc(x)+'</option>').join('');renderOrders()}catch(e){alert(e.message)}}
+function renderOrders(){const f=$('sf').value;$('ob').innerHTML=ords.filter(x=>!f||x.status===f).map(x=>'<tr><td><b>#'+x.no+'</b><br><span class="mu">'+esc(x.date)+' &middot; '+(x.delivery==='RIDER'?'Rider':'PostEx')+'</span></td><td>'+esc(x.name)+'<br><span class="mu">'+esc(x.phone)+'</span></td><td>'+esc(x.city)+'</td><td>'+x.cod+'</td><td>'+badge(x.status)+'<br><span class="mu">'+esc(x.synced)+'</span></td><td>'+esc(x.tracking)+'</td></tr>').join('')||'<tr><td colspan="6" class="mu">No orders found.</td></tr>'}
+async function syncNow(){$('sy').disabled=true;$('sm').textContent='Syncing with PostEx...';
+ try{const r=await api('sync');$('sm').textContent='Tracking found: '+r.tracked+' | Status updated: '+r.updated+(r.diag?' | '+r.diag:'');loadOrders()}catch(e){$('sm').textContent=e.message}$('sy').disabled=false}
+async function loadRider(){try{const r=await api('riderList');$('rst').innerHTML=r.statuses.map(s=>'<option>'+s+'</option>').join('');$('ra').checked=false;
+ $('rb').innerHTML=r.rows.map(x=>'<tr><td style="width:28px"><input type="checkbox" class="rc" value="'+x.no+'" style="width:auto"></td><td><b>#'+x.no+'</b> '+esc(x.name)+'<br><span class="mu">'+esc(x.date)+' &middot; '+esc(x.city)+' &middot; '+esc(x.phone)+'</span></td><td>'+x.cod+'</td><td>'+badge(x.status)+'</td></tr>').join('')||'<tr><td class="mu">No open rider parcels.</td></tr>'}catch(e){alert(e.message)}}
+function selAll(){document.querySelectorAll('.rc').forEach(c=>c.checked=$('ra').checked)}
+async function riderApply(){const n=[...document.querySelectorAll('.rc:checked')].map(c=>c.value).concat($('rn').value.split(/[\s,]+/).filter(Boolean));
+ if(!n.length){alert('Select parcels or paste order numbers.');return}if(!confirm('Set '+n.length+' order(s) to '+$('rst').value+'?'))return;
+ try{const r=await api('riderSet',{orders:n,status:$('rst').value});$('rm').innerHTML='<span class="ok">Updated: '+r.done+'</span>'+(r.skipped.length?'<br><span class="bd">Skipped: '+r.skipped.map(esc).join(', ')+'</span>':'');$('rn').value='';loadRider()}catch(e){alert(e.message)}}
+let stk=[];async function loadStock(){try{stk=(await api('stock')).rows;$('spl').innerHTML=stk.map(x=>'<option value="'+esc(x.n)+'">').join('');renderStock()}catch(e){alert(e.message)}}
+function renderStock(){const f=$('sf2').value.toLowerCase();$('sb').innerHTML=stk.filter(x=>String(x.n).toLowerCase().includes(f)).map(x=>'<tr><td>'+esc(x.n)+'</td><td><span class="bg '+(x.stock<=0?'bad':x.stock<=5?'wn':'ok')+'">'+x.stock+'</span></td></tr>').join('')}
+async function stockIn(){try{await api('stockIn',{product:$('sp').value,qty:$('sq').value,rate:$('sr').value,vendor:$('sv2').value,cash:$('scash').checked,note:$('sn').value,date:$('sd').value});['sp','sq','sr','sn','sv2'].forEach(k=>$(k).value='');$('scash').checked=false;loadStock()}catch(e){alert(e.message)}}
+async function addProd(){try{await api('addProduct',{name:$('np').value,opening:$('no2').value,cost:$('nc').value});['np','no2','nc'].forEach(k=>$(k).value='');loadStock()}catch(e){alert(e.message)}}
+async function dl(){$('dl').disabled=true;$('dl').textContent='Preparing...';
+ try{const r=await api('export',{from:$('f').value,to:$('e').value});const a=document.createElement('a');a.href='data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'+r.b64;a.download=r.name;document.body.appendChild(a);a.click();a.remove()}catch(e){alert(e.message)}
+ $('dl').disabled=false;$('dl').textContent='Download Excel'}
+
+async function loadBals(t){try{bals[t]=(await api(t==='party'?'parties':'vendors')).rows;const k=t==='party'?'ptl':'vtl';$(k).innerHTML=bals[t].map(x=>'<option value="'+esc(x.n)+'">').join('');renderBals(t)}catch(e){alert(e.message)}}
+function renderBals(t){const id=t==='party'?'pf':'vf',f=$(id).value.toLowerCase();$(t==='party'?'pb':'vb').innerHTML=bals[t].filter(x=>x.n.toLowerCase().includes(f)).map(x=>'<tr style="cursor:pointer" data-n="'+esc(x.n)+'" onclick="openLedger(\''+t+'\',this.dataset.n)"><td>'+esc(x.n)+'</td><td><b class="'+(x.bal>0?(t==='party'?'bd':'wn'):'ok')+'">'+money(x.bal)+'</b></td>'+'</tr>').join('')||'<tr><td class="mu">None yet.</td></tr>'}
+async function openLedger(t,n){try{const r=await api('ledger',{t,name:n});const b=$('lgr-'+t);b.hidden=false;
+ b.innerHTML='<h2>'+esc(n)+' &mdash; '+(t==='party'?'balance receivable':'payable')+': '+money(r.bal)+'</h2><table class="tb"><thead><tr><th>Date</th><th>Detail</th><th>'+(t==='party'?'Debit':'Paid')+'</th><th>'+(t==='party'?'Credit':'Purchase')+'</th><th>Balance</th></tr></thead><tbody>'+
+ r.rows.map(x=>'<tr><td>'+esc(x.d)+'</td><td>'+esc(x.t)+(x.id?' <button class="b s sm" data-id="'+esc(x.id)+'" data-v="'+esc(n)+'" onclick="'+(t==='party'?'cancelBill(this.dataset.id)">Cancel':'delVBill(this.dataset.id,this.dataset.v)">Delete')+'</button>':'')+'</td><td>'+(t==='party'?money(x.dr):money(x.dr))+'</td><td>'+money(x.cr)+'</td><td><b>'+money(x.bal)+'</b></td></tr>').join('')+'</tbody></table>';
+ b.scrollIntoView({behavior:'smooth'})}catch(e){alert(e.message)}}
+async function cancelBill(id){if(!confirm('Cancel bill '+id+'? Stock will be returned.'))return;try{await api('cancelBill',{id});loadBals('party');$('lgr-party').hidden=true}catch(e){alert(e.message)}}
+async function vBill(){try{const r=await api('vendorBill',{vendor:$('bv').value,billNo:$('bno').value,date:$('bd').value,amount:$('bam').value,note:$('bn2').value});
+ alert('Bill saved ('+money(r.total)+'). Vendor payable now: '+money(r.bal));['bv','bno','bam','bn2'].forEach(k=>$(k).value='');loadBals('vendor')}catch(e){alert(e.message)}}
+async function delVBill(id,v){if(!confirm('Delete bill '+id+' of '+v+'?'))return;try{await api('delVendorBill',{vendor:v,billNo:id});loadBals('vendor');openLedger('vendor',v)}catch(e){alert(e.message)}}
+async function pBill(){const it=rows('pits').filter(i=>i.p&&i.q>0);if(!$('pp').value||!it.length){alert('Select a party and add at least one item.');return}
+ try{const r=await api('partyBill',{party:$('pp').value,date:$('pd').value,paid:$('pa').value,items:it.map(i=>({p:i.p,q:i.q,r:i.r,ns:i.ns}))});
+  $('pr').innerHTML='<span class="ok">&#10003; Bill '+r.id+' saved</span><br>Previous balance: '+money(r.prev)+' | Bill: '+money(r.total)+' | Paid: '+money(r.paid)+'<br><b>New balance: '+money(r.bal)+'</b>'+(r.warn.length?'<div class="lw">Low stock: '+r.warn.map(esc).join('; ')+'</div>':'');
+  $('pp').value='';$('pa').value='';$('pits').innerHTML='';addRow('pits',0);addRow('pits',0);calcP();loadBals('party')}catch(e){alert(e.message)}}
+async function addNamed(a,n,o,p){try{await api(a,{name:$(n).value,opening:$(o).value,phone:$(p).value});[n,o,p].forEach(k=>$(k).value='');loadBals(a==='addParty'?'party':'vendor')}catch(e){alert(e.message)}}
+async function vPay(){try{const r=await api('vendorPay',{vendor:$('vv').value,amount:$('va').value,date:$('vd').value,note:$('vn').value});alert('Saved. Vendor payable now: '+money(r.after));['vv','va','vn'].forEach(k=>$(k).value='');loadBals('vendor')}catch(e){alert(e.message)}}
+function setRk(k){rk=k;['ONLINE','PARTY'].forEach(x=>$('rk-'+x).classList.toggle('on',x===k));$('cxl').textContent=k==='ONLINE'?'Source (PostEx / courier)':'Party';$('cxn').setAttribute('list',k==='PARTY'?'ptl':'');$('cxn').value=k==='ONLINE'?'PostEx':''}
+async function recv(){try{const r=await api('receive',{kind:rk,name:$('cxn').value,amount:$('cxa').value,date:$('cxd').value,note:$('cxt').value});
+ $('cxm').innerHTML='<span class="ok">&#10003; Saved ('+r.id+')</span>'+(rk==='PARTY'?' Party balance now: '+money(r.after):'');$('cxa').value='';$('cxt').value='';loadCash();if(rk==='PARTY')loadBals('party')}catch(e){alert(e.message)}}
+const cl=o=>Object.keys(o).map(k=>'<div class="cl"><span>'+esc(k)+'</span><b>'+money(o[k])+'</b></div>').join('')||'<div class="mu">Nothing yet</div>';
+async function loadCash(){try{const c=await api('cash');$('c1').textContent=money(c.inHand);$('c2').textContent=money(c.today.i)+' / '+money(c.today.o);$('c3').textContent=money(c.month.i);$('c4').textContent=money(c.month.o);$('oc').value=c.open;$('ocd').value=c.start||'';
+ $('cbi').innerHTML=cl(c.month.inCats);$('cbo').innerHTML=cl(c.month.outCats);$('ctl').innerHTML=c.cats.map(x=>'<option value="'+esc(x)+'">').join('');
+ $('cel').innerHTML=c.exp.map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.cat)+'<br><span class="mu">'+esc(x.note)+'</span></td><td>'+money(x.amt)+'</td><td><button class="b s sm" data-id="'+esc(x.id)+'" onclick="delExp(this.dataset.id)">Delete</button></td></tr>').join('')||'<tr><td class="mu">No expenses yet.</td></tr>';
+ $('cpl').innerHTML=c.pays.map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.name)+'<br><span class="mu">'+(x.kind==='ONLINE'?'Online weekly':'Party')+(x.note?' &middot; '+esc(x.note):'')+'</span></td><td>'+money(x.amt)+'</td></tr>').join('')||'<tr><td class="mu">No payments yet.</td></tr>'}catch(e){alert(e.message)}}
+async function addExp(){try{await api('expense',{cat:$('ec').value,amount:$('ea').value,date:$('ed').value,note:$('et').value});['ec','ea','et'].forEach(k=>$(k).value='');loadCash()}catch(e){alert(e.message)}}
+async function delExp(id){if(confirm('Delete this expense?')){try{await api('delExpense',{id});loadCash()}catch(e){alert(e.message)}}}
+async function setOc(){try{await api('setCash',{amount:$('oc').value,from:$('ocd').value});loadCash()}catch(e){alert(e.message)}}
+
+let bts=[];
+async function loadBatches(){try{const [r,s]=await Promise.all([api('batches'),api('stock')]);bts=r.rows;$('spl').innerHTML=s.rows.map(x=>'<option value="'+esc(x.n)+'">').join('');
+ $('btl').innerHTML=bts.filter(x=>x.status==='OPEN').map(x=>'<option value="'+esc(x.id)+'" label="'+esc(x.product+' - '+x.vendor)+'">').join('');
+ $('bbody').innerHTML=bts.map(x=>'<tr style="cursor:pointer" data-id="'+esc(x.id)+'" onclick="pickBatch(this.dataset.id)"><td><b>'+esc(x.id)+'</b><br><span class="mu">'+esc(x.date)+'</span></td><td>'+esc(x.product)+'<br><span class="mu">'+esc(x.vendor)+'</span></td><td>'+x.planned+'</td><td>'+x.received+'</td><td>'+(x.status==='OPEN'?'<span class="bg wn">Pending '+Math.max(x.planned-x.received,0)+'</span>':'<span class="bg ok">Closed</span>')+'</td></tr>').join('')||'<tr><td class="mu">No batches yet.</td></tr>'}catch(e){alert(e.message)}}
+async function pickBatch(id){$('bsel').value=id;const x=bts.find(b=>b.id===id);if(!x)return;try{const d=await api('batchDetail',{id});const b=$('bdet');b.hidden=false;
+ b.innerHTML='<h2>'+esc(x.id)+' &mdash; '+esc(x.product)+' ('+esc(x.vendor)+')</h2><div class="cl"><span>Planned / received</span><b>'+x.planned+' / '+x.received+'</b></div><div class="cl"><span>Materials &amp; packaging sent</span><b>'+money(x.pack)+'</b></div>'+
+ (x.status==='CLOSED'?'<div class="cl"><span>'+(x.kind==='LABOUR'?'Labour bill ':'Material bill ')+esc(x.billNo)+'</span><b>'+money(x.bill)+'</b></div><div class="cl"><span><b>Cost per piece</b></span><b class="ok">'+money(x.unit)+'</b></div>':'<p class="mu">Cost per piece is worked out when the vendor bill is saved.</p>')+
+ '<h2 style="margin-top:12px">Materials sent</h2>'+(d.issues.map(i=>'<div class="cl"><span>'+esc(i.date)+' &middot; '+esc(i.item)+' x '+i.qty+'</span><b>'+money(i.amt)+'</b></div>').join('')||'<div class="mu">Nothing sent yet.</div>')+
+ '<h2 style="margin-top:12px">Received</h2>'+(d.receipts.map(i=>'<div class="cl"><span>'+esc(i.date)+'</span><b>'+i.qty+'</b></div>').join('')||'<div class="mu">Nothing received yet.</div>')}catch(e){alert(e.message)}}
+async function bNew(){try{const r=await api('batchNew',{vendor:$('bnv').value,product:$('bnp').value,planned:$('bnq').value,date:$('bnd').value,note:$('bnn').value});['bnv','bnp','bnq','bnn'].forEach(k=>$(k).value='');await loadBatches();pickBatch(r.id)}catch(e){alert(e.message)}}
+async function bIssue(){const it=rows('bits').filter(i=>i.p&&i.q>0);try{const r=await api('batchIssue',{id:$('bsel').value,date:$('bid').value,items:it.map(i=>({p:i.p,q:i.q}))});
+ alert('Materials sent. Cost: '+money(r.packCost)+(r.warn.length?'\nLow stock: '+r.warn.join('; '):'')+(r.noCost.length?'\nNo cost price set for: '+r.noCost.join(', ')+' (set it in Products so the batch cost is correct)':''));
+ $('bits').innerHTML='';for(let i=0;i<3;i++)addRow('bits',0);const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
+async function bReceive(){try{await api('batchReceive',{id:$('bsel').value,qty:$('brq').value,date:$('brd').value});$('brq').value='';const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
+function kindCh(){const l=$('bkind').value==='LABOUR';$('bql').textContent=l?'Pieces':'Kg';$('brl').textContent=l?'Rate per piece':'Rate per kg';if(l&&!$('bbk').value){const x=bts.find(b=>b.id===$('bsel').value);if(x)$('bbk').value=x.received}calcBB()}
+function calcBB(){$('bbt').textContent=money((+$('bbk').value||0)*(+$('bbr').value||0))}
+async function bBill(){if(!confirm('Save the bill and close this batch?'))return;try{const r=await api('batchBill',{id:$('bsel').value,billNo:$('bbn').value,qty:$('bbk').value,kind:$('bkind').value,rate:$('bbr').value,date:$('bbd').value});
+ alert('Batch closed.\n'+(r.kind==='LABOUR'?'Labour bill ':'Material bill ')+money(r.amount)+' + materials sent '+money(r.pack)+' over '+r.received+' pieces = '+money(r.unit)+' per piece.\nCost price updated in Products.'+(r.received!==r.planned?'\nNote: planned was '+r.planned+', received '+r.received+'.':''));
+ ['bbn','bbk','bbr'].forEach(k=>$(k).value='');calcBB();const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
+
+login=async function(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{const s=await api('overview');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}};
+init=function(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');$('f').value=s.today.slice(0,8)+'01';$('e').value=s.today;nav('ov')};
+nav=function(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});if(p==='ov')loadOv();if(p==='orders')loadOrders();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()};
+loadOrders=async function(){try{const r=await api('search',{q:$('q').value});ords=r.rows;const st=[...new Set(ords.map(x=>x.status||''))].filter(Boolean).sort();$('sf').innerHTML='<option value="">All status</option>'+st.map(x=>'<option>'+esc(x)+'</option>').join('');renderOrders()}catch(e){alert(e.message)}};
+async function loadOv(){try{const o=await api('overview');$('o1').textContent=money(o.inHand);$('o2').textContent=money(o.receivable);$('o3').textContent=money(o.payable);$('o4').textContent=money(o.cashIn)+' / '+money(o.cashOut);
+ $('o5').textContent=o.tn;$('o6').textContent=money(o.tc);$('o7').textContent=o.mn;$('o8').textContent=money(o.mc);$('o9').innerHTML=Object.keys(o.status).map(k=>'<div class="cl"><span>'+badge(k)+'</span><b>'+o.status[k]+'</b></div>').join('')||'<div class="mu">No orders this month.</div>';
+ $('o10').innerHTML=o.low.map(x=>'<div class="cl"><span>'+esc(x.n)+'</span><b class="'+(x.stock<=0?'bd':'wn')+'">'+x.stock+'</b></div>').join('')||'<div class="mu">Nothing low.</div>'}catch(e){alert(e.message)}}
+try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
+</script></body></html>
