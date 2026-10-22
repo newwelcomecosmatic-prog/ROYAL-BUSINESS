@@ -1,34 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Order Tracking</title>
-<style>:root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}@media(prefers-color-scheme:dark){:root{--bg:#11151b;--cd:#1b212a;--tx:#e8ecf2;--mu:#97a2b3;--pr:#4f8fcb;--ok:#4caf50;--bad:#ef7070;--wn:#e0a040;--bd:#313a47}}
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--tx);font:15px system-ui,sans-serif}
-header{background:var(--pr);color:#fff;display:flex;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px))}header b{font-size:18px;margin-right:auto}
-.lo{background:rgba(255,255,255,.2);color:#fff;border:0;padding:7px 12px;border-radius:8px;font-weight:600;cursor:pointer}
-main{max-width:720px;margin:auto;padding:14px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
-.c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}h2{margin:0 0 8px;font-size:16px}
-input{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-.r{display:flex;gap:8px;align-items:center}.r>*{flex:1;min-width:0}
-button.b{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:13px 14px;font-size:15px;font-weight:600;width:100%;margin-top:8px;cursor:pointer}button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}button:disabled{opacity:.5}
-.bg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd);color:var(--tx)}.bg.ok{background:#1a7f3722;color:var(--ok)}.bg.bad{background:#c6282822;color:var(--bad)}.bg.go{background:#1F4E7822;color:var(--pr)}.bg.wn{background:#b26a0022;color:var(--wn)}
-.cl{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.mu{color:var(--mu);font-size:12px}.bd{color:var(--bad)}.ok{color:var(--ok)}a{color:var(--pr)}
-.k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.k div{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px}.k small{color:var(--mu);display:block}.k b{font-size:19px}
-#lg{max-width:360px;margin:70px auto}</style></head><body>
-<div id="lg" class="c"><h2>Order Tracking</h2><input id="pin" type="password" inputmode="numeric" placeholder="PIN" onkeydown="if(event.key==='Enter')login()"><button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
-<div id="ap" hidden><header><b>Order Tracking</b><button class="lo" onclick="logout()">Log out</button></header>
-<main><div class="c"><input id="q" placeholder="Order no, phone number or tracking number" onkeydown="if(event.key==='Enter')go()"><button class="b" onclick="go()">Search</button>
-<button class="b s" id="sy" onclick="sync()">Update status from PostEx</button><div id="sm" class="mu" style="margin-top:6px"></div></div><div id="res"></div></main></div>
-<script src="../config.js"></script>
-<script>const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const $=i=>document.getElementById(i);const money=n=>Number(n||0).toLocaleString('en-US');let pin='';
-async function api(a,x){let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server. Check internet.')}
- let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page. Check the config.js URL and that Web App access is Anyone.')}if(j.error)throw new Error(j.error);return j}
-function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/^deliver/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
-function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
-function card(x){return '<div class="c"><div class="r" style="justify-content:space-between"><b style="font-size:17px">#'+x.no+'</b><span style="text-align:right">'+badge(x.status)+'</span></div>'+
- '<div style="margin-top:6px">'+esc(x.name)+' &middot; <a href="tel:'+esc(x.phone)+'">'+esc(x.phone)+'</a></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div>'+
- '<div style="margin:8px 0">'+esc(x.items)+'</div><div class="cl"><span>Amount + D.C &minus; Advance</span><span>'+money(x.amount)+' + '+money(x.dc)+' &minus; '+money(x.adv)+'</span></div>'+
- '<div class="cl"><b>COD</b><b>'+money(x.cod)+'</b></div><div class="cl"><span>Tracking</span><span>'+(esc(x.tracking)||'-')+'</span></div>'+
- '<div class="mu" style="margin-top:6px">'+esc(x.date)+' &middot; '+(x.delivery==='RIDER'?'Rider (Lahore)':'PostEx')+' &middot; updated '+esc(x.synced||'-')+'</div></div>'}
-async function go(){try{const r=await api('search',{q:$('q').value});$('res').innerHTML=r.rows.map(card).join('')||'<div class="c mu">No order found.</div>'}catch(e){alert(e.message)}}
-async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{await api('search',{q:'x@@'});try{sessionStorage.setItem('pin',pin)}catch(e){}$('lg').hidden=true;$('ap').hidden=false;go()}catch(e){$('le').textContent=e.message}}
-async function sync(){$('sy').disabled=true;$('sm').textContent='Updating from PostEx...';try{const r=await api('sync');$('sm').textContent='Tracking found: '+r.tracked+' | Status updated: '+r.updated;go()}catch(e){$('sm').textContent=e.message}$('sy').disabled=false}
-try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
-</script></body></html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Royal</title>
+<style>body{margin:0;font:16px system-ui,sans-serif;background:#f2f4f8;color:#18212d;display:flex;min-height:100vh;align-items:center;justify-content:center}
+@media(prefers-color-scheme:dark){body{background:#11151b;color:#e8ecf2}a{background:#1b212a!important;border-color:#313a47!important;color:#e8ecf2!important}}
+div{width:min(420px,92vw)}h1{text-align:center}a{display:block;padding:18px;margin:10px 0;background:#fff;border:1px solid #d8dde6;border-radius:12px;text-decoration:none;color:#18212d;font-weight:600}small{display:block;font-weight:400;color:#667386;margin-top:3px}</style></head>
+<body><div><h1>Royal</h1><a href="track.html">Order Tracking<small>Search order, phone or tracking number</small></a><a href="rider.html">Rider<small>Scan parcels and update status</small></a>
+<a href="CEO.html">CEO<small>View only: orders, stock, parties, vendors, cash, reports</small></a><a href="manager.html">Manager<small>Full access</small></a></div></body></html>

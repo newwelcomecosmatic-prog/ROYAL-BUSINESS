@@ -96,14 +96,14 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <div class="pg" id="p-rep"><div class="c" style="max-width:520px"><h2>Excel download</h2><div class="r"><div><label>From</label><input id="f" type="date"></div><div><label>To</label><input id="e" type="date"></div></div>
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
-<script src="../config.js"></script>
+<script>document.write('<script src="config.js?v='+Date.now()+'"><\/script>')</script>
 <script>
 let pin='',pr={},dv='POSTEX',dvMan=0,ords=[];const $=i=>document.getElementById(i);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const PG=[['ov','Overview'],['orders','Orders'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
 const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
-async function api(a,x){if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
- let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server. Check internet / API URL.')}
+async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be in the repo root, next to the app folders.');if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
+ let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page instead of data. Check that the API URL ends with /exec and the Web App access is "Anyone", then redeploy.')}
  if(j.error)throw new Error(j.error);return j}
 function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/deliver(ed)?$/i.test(s)&&!/out/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}

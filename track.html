@@ -16,16 +16,16 @@ button.b{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:13p
 <div id="ap" hidden><header><b>Order Tracking</b><button class="lo" onclick="logout()">Log out</button></header>
 <main><div class="c"><input id="q" placeholder="Order no, phone number or tracking number" onkeydown="if(event.key==='Enter')go()"><button class="b" onclick="go()">Search</button>
 <button class="b s" id="sy" onclick="sync()">Update status from PostEx</button><div id="sm" class="mu" style="margin-top:6px"></div></div><div id="res"></div></main></div>
-<script src="../config.js"></script>
+<script>document.write('<script src="config.js?v='+Date.now()+'"><\/script>')</script>
 <script>const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const $=i=>document.getElementById(i);const money=n=>Number(n||0).toLocaleString('en-US');let pin='';
-async function api(a,x){let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server. Check internet.')}
+async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be in the repo root, next to the app folders.');let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page. Check the config.js URL and that Web App access is Anyone.')}if(j.error)throw new Error(j.error);return j}
 function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/^deliver/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
 function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
 function card(x){return '<div class="c"><div class="r" style="justify-content:space-between"><b style="font-size:17px">#'+x.no+'</b><span style="text-align:right">'+badge(x.status)+'</span></div>'+
  '<div style="margin-top:6px">'+esc(x.name)+' &middot; <a href="tel:'+esc(x.phone)+'">'+esc(x.phone)+'</a></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div>'+
  '<div style="margin:8px 0">'+esc(x.items)+'</div><div class="cl"><span>Amount + D.C &minus; Advance</span><span>'+money(x.amount)+' + '+money(x.dc)+' &minus; '+money(x.adv)+'</span></div>'+
- '<div class="cl"><b>COD</b><b>'+money(x.cod)+'</b></div><div class="cl"><span>Tracking</span><span>'+(esc(x.tracking)||'-')+'</span></div>'+
+ (x.remarks?'<div class="mu">Remarks: '+esc(x.remarks)+'</div>':'')+'<div class="cl"><b>COD</b><b>'+money(x.cod)+'</b></div><div class="cl"><span>Tracking</span><span>'+(esc(x.tracking)||'-')+'</span></div>'+
  '<div class="mu" style="margin-top:6px">'+esc(x.date)+' &middot; '+(x.delivery==='RIDER'?'Rider (Lahore)':'PostEx')+' &middot; updated '+esc(x.synced||'-')+'</div></div>'}
 async function go(){try{const r=await api('search',{q:$('q').value});$('res').innerHTML=r.rows.map(card).join('')||'<div class="c mu">No order found.</div>'}catch(e){alert(e.message)}}
 async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{await api('search',{q:'x@@'});try{sessionStorage.setItem('pin',pin)}catch(e){}$('lg').hidden=true;$('ap').hidden=false;go()}catch(e){$('le').textContent=e.message}}
