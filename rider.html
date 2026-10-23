@@ -1,32 +1,36 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Rider</title>
-<style>
-:root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Royal Rider</title>
+<link rel="manifest" href="manifest-rider.json"><meta name="theme-color" content="#1a7f37"><link rel="apple-touch-icon" href="icon-rider-192.png">
+<style>:root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}
 @media(prefers-color-scheme:dark){:root{--bg:#11151b;--cd:#1b212a;--tx:#e8ecf2;--mu:#97a2b3;--pr:#4f8fcb;--ok:#4caf50;--bad:#ef7070;--wn:#e0a040;--bd:#313a47}}
 *{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--tx);font:15px system-ui,sans-serif}
-header{background:var(--pr);color:#fff;display:flex;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px))}header b{font-size:18px;margin-right:auto}
+header{background:var(--pr);color:#fff;display:flex;align-items:center;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px))}header b{font-size:18px;margin-right:auto}header small{opacity:.85}
 .lo{background:rgba(255,255,255,.2);color:#fff;border:0;padding:7px 12px;border-radius:8px;font-weight:600;cursor:pointer}
-main{max-width:720px;margin:auto;padding:14px;padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+main{max-width:760px;margin:auto;padding:14px;padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
 .c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}h2{margin:0 0 8px;font-size:16px}
-input{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
 label.m{display:block;margin:10px 0 3px;color:var(--mu);font-size:12px}
 .r{display:flex;gap:8px;align-items:center}.r>*{flex:1;min-width:0}
-button.b{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:13px 14px;font-size:15px;font-weight:600;width:100%;margin-top:8px;cursor:pointer}button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}button:disabled{opacity:.5}
+button.b,a.b{display:block;text-align:center;text-decoration:none;background:var(--pr);color:#fff;border:0;border-radius:10px;padding:12px 14px;font-size:15px;font-weight:600;width:100%;margin-top:8px;cursor:pointer}button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}button:disabled{opacity:.5}
 .bg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd);color:var(--tx)}.bg.ok{background:#1a7f3722;color:var(--ok)}.bg.bad{background:#c6282822;color:var(--bad)}.bg.go{background:#1F4E7822;color:var(--pr)}.bg.wn{background:#b26a0022;color:var(--wn)}
-.cl{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--bd);font-size:14px}.mu{color:var(--mu);font-size:12px}.bd{color:var(--bad)}.ok{color:var(--ok)}a{color:var(--pr)}
-.k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.k div{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px}.k small{color:var(--mu);display:block}.k b{font-size:19px}.k4{grid-template-columns:repeat(2,1fr)}
+.cl{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.mu{color:var(--mu);font-size:12px}.bd{color:var(--bad)}.ok{color:var(--ok)}a{color:var(--pr)}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:9}.ov>.c{width:100%;max-width:520px;max-height:92vh;overflow:auto;margin:0;border-radius:16px 16px 0 0}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.pc{cursor:pointer}.big{font-size:26px;font-weight:700}.cash{font-size:28px;font-weight:800;color:var(--ok)}
 #lg{max-width:360px;margin:70px auto}
+
+header{background:#1a7f37}
+.k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.k div{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px}.k small{color:var(--mu);display:block}.k b{font-size:19px}.k4{grid-template-columns:repeat(2,1fr)}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.pc{cursor:pointer}.big{font-size:26px;font-weight:700}.cash{font-size:28px;font-weight:800;color:var(--ok)}
+h3{margin:16px 0 8px;font-size:14px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script></head><body>
-<div id="lg" class="c"><h2>Rider</h2><input id="pin" type="password" inputmode="numeric" placeholder="PIN" onkeydown="if(event.key==='Enter')login()"><button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
-<div id="ap" hidden><header><b>Rider &mdash; Lahore parcels</b><button class="lo" onclick="logout()">Log out</button></header>
-<main><div class="r" style="margin-bottom:12px"><button class="b" id="t1" style="margin:0" onclick="tab(1)">Parcels</button><button class="b s" id="t2" style="margin:0" onclick="tab(2)">Day report</button></div>
-<div id="pv"><div class="k"><div><small>With me</small><b id="k1">0</b></div><div><small>To pick up</small><b id="k2">0</b></div><div><small>COD with me</small><b id="k3">0</b></div></div>
-<button class="b" onclick="startScan()">Scan to pick up</button>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script></head><body>
+<div id="lg" class="c"><h2>Royal Rider</h2><input id="pin" type="password" inputmode="numeric" placeholder="PIN" onkeydown="if(event.key==='Enter')login()"><button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
+<div id="ap" hidden><header><b>Royal Rider &mdash; Lahore</b><button class="lo" onclick="logout()">Log out</button></header>
+<main><div class="r" style="margin-bottom:12px"><button class="b" id="t1" style="margin:0;background:#1a7f37" onclick="tab(1)">Parcels</button><button class="b s" id="t2" style="margin:0" onclick="tab(2)">Day report</button></div>
+<div id="pv"><div class="k"><div><small>Picked up</small><b id="k1">0</b></div><div><small>Pending (with me)</small><b id="k2">0</b></div><div><small>Updated today</small><b id="k3">0</b></div></div>
+<button class="b" style="background:#1a7f37" onclick="startScan()">Scan parcel to pick up</button>
+<div class="c" style="margin-top:12px"><h2>Add manually</h2><div class="r"><input id="mn" inputmode="numeric" placeholder="Order number" onkeydown="if(event.key==='Enter')find($('mn').value)"><button class="b" style="width:auto;margin:0;flex:none" onclick="find($('mn').value)">Pick up</button></div></div>
 <div class="r"><button class="b s" onclick="pickupPdf()">Pickup sheet (PDF)</button><button class="b s" onclick="load()">Refresh</button></div>
-<div class="c" style="margin-top:12px"><div class="r"><input id="mn" inputmode="numeric" placeholder="Or type order number"><button class="b" style="width:auto;margin:0;flex:none" onclick="find($('mn').value)">Find</button></div></div>
 <div id="list"></div></div>
 <div id="rv" hidden><div class="c"><div class="r"><input id="rd" type="date"><button class="b" style="width:auto;margin:0;flex:none" onclick="report()">Show</button></div></div><div id="rpt"></div></div></main></div>
 <div id="sc" class="ov" hidden><div class="c"><h2>Scan parcel slip</h2><div class="mu" id="sinfo"></div><div id="reader"></div><button class="b s" onclick="stopScan()">Finish scanning</button></div></div>
@@ -36,55 +40,69 @@ button.b{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:13p
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const $=i=>document.getElementById(i);const money=n=>Number(n||0).toLocaleString('en-US');let pin='';
 async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be next to this file in the repo.');let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page. Check the config.js URL and that Web App access is Anyone.')}if(j.error)throw new Error(j.error);return j}
-function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Booked</span>';const c=/^deliver/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s==='Out for Delivery'?'Picked up':s)+'</span>'}
+function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Booked</span>';const c=/^delivered$/i.test(s)?'ok':/return|cancel|cancal/i.test(s)?'bad':/^out for delivery$/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(/^out for delivery$/i.test(s)?'Picked up':s)+'</span>'}
 function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
-let cur=null,qr=null,rows=[],scanMode=false,sess=0,rpt=null,busy=false;
-const isWith=x=>/^(out for delivery|pending)$/i.test(String(x.status||'').trim());
-const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+let cur=null,qr=null,rows=[],TD='',scanMode=false,sess=0,rpt=null,busy=false,pend='';
+const st=x=>String(x.status||'').trim(),isOFD=x=>/^out for delivery$/i.test(st(x)),isPend=x=>/^pending$/i.test(st(x)),isWith=x=>isOFD(x)||isPend(x),isFin=x=>/^(delivered|returned|cancel+ed|cancal)$/i.test(st(x));
+const doneToday=x=>x.upd===TD&&/^(delivered|returned|pending)$/i.test(st(x));
+const byNo=(a,b)=>a.no-b.no,today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{await load();try{sessionStorage.setItem('pin',pin)}catch(e){}$('lg').hidden=true;$('ap').hidden=false}catch(e){$('le').textContent=e.message}}
-async function load(){const r=await api('riderList');rows=r.rows;const w=rows.filter(isWith),b=rows.filter(x=>!isWith(x));
- $('k1').textContent=w.length;$('k2').textContent=b.length;$('k3').textContent=money(w.reduce((t,x)=>t+(+x.cod||0),0));
- const sec=(t,a)=>a.length?'<h2 style="margin:14px 0 8px">'+t+'</h2>'+a.map(x=>'<div class="c pc" data-n="'+x.no+'" onclick="show(this.dataset.n)"><div class="r" style="justify-content:space-between"><b>#'+x.no+' '+esc(x.name)+'</b><span style="flex:none">'+badge(x.status)+'</span></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div><div class="cl" style="border:0"><span>COD'+(x.rdc!==''&&x.rdc!=null?' &middot; D.C '+money(x.rdc):'')+(x.remarks&&/pending/i.test(x.status)?' &middot; '+esc(x.remarks):'')+'</span><b>'+money(x.cod)+'</b></div></div>').join(''):'';
- $('list').innerHTML=sec('With me ('+w.length+')',w)+sec('Waiting to be picked up ('+b.length+')',b)||'<div class="c mu">No parcels.</div>'}
+async function load(){const r=await api('riderList',{all:1});rows=r.rows;TD=r.today;
+ const A=rows.filter(isOFD).sort(byNo),B=rows.filter(x=>isPend(x)&&x.upd!==TD).sort(byNo),C=rows.filter(doneToday).sort(byNo),D=rows.filter(x=>!isWith(x)&&!isFin(x)).sort(byNo);
+ $('k1').textContent=A.length;$('k2').textContent=rows.filter(isPend).length;$('k3').textContent=C.length;
+ const sec=(t,a,h)=>a.length?'<h3>'+t+' ('+a.length+')</h3>'+(h||'')+a.map(x=>'<div class="c pc" data-n="'+x.no+'" onclick="show(this.dataset.n)"><div class="r" style="justify-content:space-between"><b>#'+x.no+' '+esc(x.name)+'</b><span style="flex:none">'+badge(x.status)+'</span></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div><div class="cl" style="border:0"><span>COD'+(x.rdc!==''&&x.rdc!=null?' &middot; my D.C '+money(x.rdc):'')+((isPend(x)||/returned/i.test(st(x)))&&x.remarks?'<br><span class="mu">'+esc(x.remarks)+'</span>':'')+'</span><b>'+money(x.cod)+'</b></div></div>').join(''):'';
+ $('list').innerHTML=sec('Picked up',A)+sec('Pending from earlier days',B)+sec('Updated today',C)+sec('Waiting to be picked up',D)||'<div class="c mu">No parcels.</div>'}
 function show(n){const x=rows.find(r=>String(r.no)===String(n));if(x)open_(x)}
 async function find(t){const v=String(t||'').trim();if(!v){if(scanMode)resume();return}try{const r=await api('scan',{code:v});open_(r.order);$('mn').value=''}catch(e){alert(e.message);if(scanMode)resume()}}
-function open_(x){cur=x;const st=String(x.status||'').trim(),fin=/^(delivered|returned|cancel+ed|cancal)$/i.test(st),w=/^(out for delivery|pending)$/i.test(st);$('dt').hidden=false;
- let h='<div class="r" style="justify-content:space-between"><h2>#'+x.no+'</h2><span style="flex:none">'+badge(x.status)+'</span></div><div class="big">COD '+money(x.cod)+'</div><div class="mu">Parcel amount '+money(x.amount)+' (never changes)</div>'+
- '<div style="margin:6px 0"><b>'+esc(x.name)+'</b></div><div><a href="tel:'+esc(x.phone)+'">Call '+esc(x.phone)+'</a></div>'+
- '<div style="margin:6px 0">'+esc(x.city)+' &middot; '+esc(x.address)+' &middot; <a target="_blank" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.address+' '+x.city)+'">Map</a></div><div class="mu">'+esc(x.items)+'</div>';
- const dcv=(x.rdc===''||x.rdc==null)?'':x.rdc;
- if(fin)h+='<div class="c mu" style="margin-top:10px">This parcel is already '+esc(st)+'.</div>';
- else if(!w)h+='<label class="m">Your D.C for this parcel (we pay you this)</label><input id="dcv" type="number" inputmode="numeric" placeholder="e.g. 350" value="'+dcv+'"><button class="b" style="background:var(--ok)" onclick="pick()">Pick up</button>';
- else h+='<label class="m">Your D.C</label><input id="dcv" type="number" inputmode="numeric" value="'+dcv+'"><label class="m">Paid online by customer (amount, only if delivered)</label><input id="onv" type="number" inputmode="numeric" placeholder="0" value="'+(x.online||'')+'"><label class="m">Remarks (required for Pending / Returned)</label><input id="rmk" placeholder="e.g. customer not answering, deliver tomorrow" value="'+esc(x.remarks)+'">'+
-  '<div class="g3" style="margin-top:6px"><button class="b" style="background:var(--ok)" onclick="setS(\'Delivered\')">Delivered</button><button class="b" style="background:var(--wn)" onclick="setS(\'Pending\')">Pending</button><button class="b" style="background:var(--bad)" onclick="setS(\'Returned\')">Returned</button></div>';
+function head(x){return '<div class="r" style="justify-content:space-between"><h2>#'+x.no+'</h2><span style="flex:none">'+badge(x.status)+'</span></div><div class="big">COD '+money(x.cod)+'</div><div class="mu">Parcel amount '+money(x.amount)+' + customer D.C '+money(x.dc)+' &minus; advance '+money(x.adv)+'</div>'+
+ '<div style="margin:8px 0 4px"><b>'+esc(x.name)+'</b></div><div><a href="tel:'+esc(x.phone)+'">Call '+esc(x.phone)+'</a></div><div style="margin:6px 0">'+esc(x.city)+' &middot; '+esc(x.address)+' &middot; <a target="_blank" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.address+' '+x.city)+'">Map</a></div><div class="mu">'+esc(x.items)+'</div>'}
+function open_(x){cur=x;pend='';$('dt').hidden=false;let h=head(x);const hasDc=x.rdc!==''&&x.rdc!=null;
+ if(isFin(x))h+='<div class="c mu" style="margin-top:10px">This parcel is already '+esc(st(x))+'. The rider cannot change it.</div>'+(hasDc?'<div class="cl"><span>My D.C</span><b>'+money(x.rdc)+'</b></div>':'');
+ else if(!isWith(x))h+='<div class="c" style="margin-top:10px;background:var(--bg)"><div class="cl" style="border:0"><span>Delivery charges in the bill (customer pays)</span><b>Rs '+money(x.dc)+'</b></div><label class="m">My D.C &mdash; what the company pays me for this parcel</label><input id="dcv" type="number" inputmode="numeric" placeholder="e.g. 350"></div><button class="b" style="background:#1a7f37" onclick="pick()">Pick up</button>';
+ else h+='<div class="cl" style="margin-top:8px"><span>My D.C (locked after pickup)</span><b>'+(hasDc?'Rs '+money(x.rdc):'-')+'</b></div><label class="m">Paid online by the customer (optional, only for Delivered)</label><input id="onv" type="number" inputmode="numeric" placeholder="0" value="'+(x.online||'')+'">'+
+  '<div class="g3" style="margin-top:8px"><button class="b" style="background:#1a7f37" onclick="delivered()">Delivered</button><button class="b" style="background:var(--wn)" onclick="ask(\'Pending\')">Pending</button><button class="b" style="background:var(--bad)" onclick="ask(\'Returned\')">Returned</button></div>'+
+  '<div id="rmbox" hidden><label class="m" id="rml"></label><textarea id="rmk" rows="2" placeholder="Write the reason / remarks"></textarea><button class="b" id="rmb" onclick="confirmRm()">Confirm</button></div>';
  $('dc').innerHTML=h+'<button class="b s" onclick="closeD()">Close</button>'}
 function closeD(){$('dt').hidden=true;if(scanMode)resume()}
-async function pick(){if($('dcv').value===''){alert('Enter your D.C for this parcel.');return}try{await api('riderSet',{orders:[cur.no],status:'Out for Delivery',dc:$('dcv').value});sess++;$('dt').hidden=true;await load();if(scanMode)resume()}catch(e){alert(e.message)}}
-async function setS(s){const rm=$('rmk').value.trim();if((s==='Pending'||s==='Returned')&&!rm){alert('Please write a remark for '+s+'.');return}
- if(s==='Returned'&&!confirm('Mark #'+cur.no+' as Returned?'))return;if(s==='Delivered'&&$('dcv').value===''&&!confirm('No D.C entered. Mark as delivered without D.C?'))return;
- try{await api('riderSet',{orders:[cur.no],status:s,remarks:rm,dc:$('dcv').value,online:s==='Delivered'?$('onv').value:''});$('dt').hidden=true;await load();if(scanMode)resume()}catch(e){alert(e.message)}}
-function startScan(){if(typeof Html5Qrcode==='undefined'){alert('Scanner could not load. Type the order number instead.');return}scanMode=true;sess=0;resume()}
+async function pick(){if($('dcv').value===''){alert('Enter your D.C for this parcel.');return}try{const r=await api('riderSet',{orders:[cur.no],status:'Out for Delivery',dc:$('dcv').value});if(!r.done){alert(r.skipped.join(', '));return}sess++;$('dt').hidden=true;await load();if(scanMode)resume()}catch(e){alert(e.message)}}
+function ask(s){pend=s;$('rml').textContent='Remarks for '+s+' (required)';$('rmk').value=/pending|returned/i.test(st(cur))?(cur.remarks||''):'';$('rmb').textContent='Confirm '+s;$('rmbox').hidden=false;$('rmk').focus()}
+function confirmRm(){const rm=$('rmk').value.trim();if(!rm){alert('Please write the remarks.');return}if(pend==='Returned'&&!confirm('Mark #'+cur.no+' as Returned?'))return;setS(pend,rm)}
+function delivered(){if(confirm('Mark #'+cur.no+' as Delivered?'))setS('Delivered','')}
+async function setS(s,rm){try{const r=await api('riderSet',{orders:[cur.no],status:s,remarks:rm,online:s==='Delivered'?$('onv').value:''});if(!r.done){alert(r.skipped.join(', '));return}$('dt').hidden=true;await load();if(scanMode)resume()}catch(e){alert(e.message)}}
+function startScan(){if(typeof Html5Qrcode==='undefined'){alert('Scanner could not load. Use "Add manually" instead.');return}scanMode=true;sess=0;resume()}
 function resume(){if(!scanMode||qr)return;$('sc').hidden=false;$('sinfo').textContent='Picked up in this session: '+sess;busy=false;qr=new Html5Qrcode('reader');
- qr.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:160}},t=>{if(busy)return;busy=true;const m=String(t).match(/\d{3,}/),c=m?m[0]:t;stopCam().then(()=>{$('sc').hidden=true;find(c)})},()=>{}).catch(e=>{qr=null;scanMode=false;$('sc').hidden=true;alert('Camera not available. Allow camera access, or type the order number.')})}
+ qr.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:160}},t=>{if(busy)return;busy=true;const m=String(t).match(/\d{3,}/),c=m?m[0]:t;stopCam().then(()=>{$('sc').hidden=true;find(c)})},()=>{}).catch(e=>{qr=null;scanMode=false;$('sc').hidden=true;alert('Camera not available. Allow camera access, or use "Add manually".')})}
 function stopCam(){const q=qr;qr=null;return q?q.stop().then(()=>q.clear()).catch(()=>{}):Promise.resolve()}
 function stopScan(){scanMode=false;stopCam().then(()=>{$('sc').hidden=true;load()})}
-function pdf(title,lines,fname){const J=window.jspdf;if(!J){alert('PDF library could not load. Check internet and try again.');return}const d=new J.jsPDF({unit:'pt',format:'a4'});let y=44;d.setFontSize(14);d.text(title,40,y);y+=24;d.setFontSize(10);
- lines.forEach(l=>{d.splitTextToSize(String(l),515).forEach(t=>{if(y>800){d.addPage();y=44}d.text(t,40,y);y+=14})});d.save(fname)}
-function pickupPdf(){const w=rows.filter(isWith).sort((a,b)=>a.no-b.no);if(!w.length){alert('No parcels with you right now.');return}
- const L=['Parcels with rider: '+w.length+'   |   Total COD: Rs '+w.reduce((t,x)=>t+(+x.cod||0),0)+'   |   Total D.C: Rs '+w.reduce((t,x)=>t+(+x.rdc||0),0),''];
- w.forEach((x,i)=>{L.push((i+1)+'. #'+x.no+'  '+x.name+'  '+x.phone,'    '+x.address+', '+x.city,'    '+x.items,'    COD Rs '+x.cod+'  |  D.C Rs '+(x.rdc===''||x.rdc==null?0:x.rdc)+'  |  '+(x.status==='Pending'?'CARRIED OVER (Pending)':'Picked up')+(x.remarks&&x.status==='Pending'?'  |  '+x.remarks:''),'')});
- pdf('Pickup sheet - '+today(),L,'pickup_'+today()+'.pdf')}
-function tab(n){$('pv').hidden=n!==1;$('rv').hidden=n!==2;$('t1').className='b'+(n===1?'':' s');$('t2').className='b'+(n===2?'':' s');if(n===2){if(!$('rd').value)$('rd').value=today();report()}}
+/* ---------- PDF (brand header, summary, tables) ---------- */
+const BLUE=[31,78,120];
+function newDoc(title,sub){const J=window.jspdf;if(!J||!J.jsPDF.API.autoTable){alert('PDF library could not load. Check internet and try again.');return null}const d=new J.jsPDF({unit:'pt',format:'a4'});
+ d.setFillColor(BLUE[0],BLUE[1],BLUE[2]);d.rect(0,0,595,64,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(21);d.text('ROYAL WELCOME',30,32);d.setFont('helvetica','normal');d.setFontSize(10);d.text(title,30,51);d.text(sub,565,51,{align:'right'});d.setTextColor(20,20,20);return d}
+const tbl=(d,y,head,body,o)=>{d.autoTable(Object.assign({startY:y,head:[head],body:body,theme:'grid',headStyles:{fillColor:BLUE,textColor:255},styles:{fontSize:9,cellPadding:4,valign:'top'},margin:{left:30,right:30}},o||{}));return d.lastAutoTable.finalY};
+function pickupPdf(){const w=rows.filter(isWith).sort(byNo);if(!w.length){alert('No parcels with you right now.');return}
+ const d=newDoc('Rider Pickup Sheet',today());if(!d)return;const cod=w.reduce((t,x)=>t+(+x.cod||0),0),dcs=w.reduce((t,x)=>t+(+x.rdc||0),0);
+ let y=tbl(d,80,['Summary',''],[['Total parcels',w.length],['Carried over (pending)',w.filter(isPend).length],['Total amount to collect (COD)','Rs '+money(cod)],['Total delivery charges (to pay the rider)','Rs '+money(dcs)]],{tableWidth:300,columnStyles:{1:{halign:'right'}}});
+ y=tbl(d,y+16,['#','Order no','Name','Phone number','Address','Amount (COD)','Delivery charges'],w.map((x,i)=>[i+1,'#'+x.no+(isPend(x)?'\n(pending)':''),x.name,x.phone,x.address+', '+x.city,money(x.cod),money(x.rdc===''||x.rdc==null?0:x.rdc)]),
+  {styles:{fontSize:8.5,cellPadding:4,valign:'top'},columnStyles:{0:{cellWidth:22},1:{cellWidth:52},3:{cellWidth:68},5:{halign:'right',cellWidth:52},6:{halign:'right',cellWidth:56}},foot:[['','','','','Total',money(cod),money(dcs)]],footStyles:{fillColor:[228,235,244],textColor:20,fontStyle:'bold',halign:'right'}});
+ y+=46;if(y>770){d.addPage();y=80}d.setFontSize(9);d.line(40,y,210,y);d.text('Rider signature',40,y+12);d.line(380,y,555,y);d.text('Received by (company)',380,y+12);d.save('pickup_sheet_'+today()+'.pdf')}
+function reportPdf(){const r=rpt,t=r.totals,d=newDoc('Rider Day Report',r.date);if(!d)return;
+ let y=tbl(d,80,['Parcels',''],[['Picked up',t.picked],['Delivered',t.delivered],['Returned',t.returned],['Pending (stay with rider)',t.pending]],{tableWidth:260,columnStyles:{1:{halign:'right'}}});
+ y=tbl(d,y+14,['Payment',''],[['Total COD of delivered parcels','Rs '+money(t.cod)],['Less: rider D.C (delivered parcels)','- Rs '+money(t.dc)],['Less: online payments received','- Rs '+money(t.online)],['CASH RIDER GIVES TO THE COMPANY','Rs '+money(t.cash)]],{tableWidth:340,columnStyles:{1:{halign:'right'}},didParseCell:h=>{if(h.row.index===3&&h.section==='body'){h.cell.styles.fontStyle='bold';h.cell.styles.fillColor=[228,244,232]}}});
+ const D=r.rows.filter(x=>x.status==='Delivered'),R=r.rows.filter(x=>x.status==='Returned'),P=r.rows.filter(x=>x.status==='Pending');
+ if(D.length)y=tbl(d,y+18,['Delivered','Name','COD','Rider D.C','Online'],D.map(x=>['#'+x.no,x.name,money(x.cod),money(x.dc),money(x.online)]),{columnStyles:{2:{halign:'right'},3:{halign:'right'},4:{halign:'right'}}});
+ if(R.length)y=tbl(d,y+18,['Returned','Name','COD','Remarks'],R.map(x=>['#'+x.no,x.name,money(x.cod),x.remarks]),{columnStyles:{2:{halign:'right'}}});
+ if(P.length)y=tbl(d,y+18,['Pending','Name','COD','Remarks'],P.map(x=>['#'+x.no,x.name,money(x.cod),x.remarks]),{columnStyles:{2:{halign:'right'}}});
+ d.save('rider_report_'+r.date+'.pdf')}
+/* ---------- day report ---------- */
+function tab(n){$('pv').hidden=n!==1;$('rv').hidden=n!==2;$('t1').className='b'+(n===1?'':' s');$('t2').className='b'+(n===2?'':' s');$('t1').style.background=n===1?'#1a7f37':'';if(n===2){if(!$('rd').value)$('rd').value=today();report()}}
 async function report(){try{const r=await api('riderReport',{date:$('rd').value}),t=r.totals;rpt=r;
- if(r.date===today()&&r.unresolved.length){$('rpt').innerHTML='<div class="c"><h2 class="bd">Day report is locked</h2><p>'+r.unresolved.length+' parcel(s) are still marked <b>Picked up</b>. Set each one to Delivered, Pending or Returned first.</p>'+r.unresolved.map(x=>'<div class="cl pc" data-n="'+x.no+'" onclick="openU(this.dataset.n)"><span>#'+x.no+' '+esc(x.name)+'</span><b>'+money(x.cod)+'</b></div>').join('')+'</div>';return}
+ if(r.date===today()&&r.unresolved.length){$('rpt').innerHTML='<div class="c"><h2 class="bd">Day report is locked</h2><p>'+r.unresolved.length+' parcel(s) are still marked <b>Picked up</b>. Set each one to Delivered, Pending or Returned first (tap to open).</p>'+r.unresolved.map(x=>'<div class="cl pc" data-n="'+x.no+'" onclick="openU(this.dataset.n)"><span>#'+x.no+' '+esc(x.name)+'</span><b>'+money(x.cod)+'</b></div>').join('')+'</div>';return}
+ if(!r.rows.length){$('rpt').innerHTML='<div class="c mu">No parcel activity on '+esc(r.date)+'.</div>';return}
  const grp=(s,l)=>{const x=r.rows.filter(y=>y.status===s);return x.length?'<div class="c"><h2>'+l+' ('+x.length+')</h2>'+x.map(y=>'<div class="cl"><span>#'+y.no+' '+esc(y.name)+'<br><span class="mu">'+(s==='Delivered'?'D.C '+money(y.dc)+(y.online?' &middot; online '+money(y.online):''):esc(y.remarks))+'</span></span><b>'+money(y.cod)+'</b></div>').join('')+'</div>':''};
- $('rpt').innerHTML='<div class="k k4"><div><small>Picked up</small><b>'+t.picked+'</b></div><div><small>Delivered</small><b>'+t.delivered+'</b></div><div><small>Returned</small><b>'+t.returned+'</b></div><div><small>Pending (stay with me)</small><b>'+t.pending+'</b></div></div>'+
+ $('rpt').innerHTML='<div class="k k4"><div><small>Picked up</small><b>'+t.picked+'</b></div><div><small>Delivered</small><b>'+t.delivered+'</b></div><div><small>Returned</small><b>'+t.returned+'</b></div><div><small>Pending</small><b>'+t.pending+'</b></div></div>'+
  '<div class="c"><h2>Payment</h2><div class="cl"><span>Total COD of delivered parcels</span><b>'+money(t.cod)+'</b></div><div class="cl"><span>&minus; My D.C (delivered parcels)</span><b>'+money(t.dc)+'</b></div><div class="cl"><span>&minus; Online payments received</span><b>'+money(t.online)+'</b></div><div class="cl" style="border:0"><span><b>Cash I give to the company</b></span><span class="cash">'+money(t.cash)+'</span></div></div>'+
- grp('Delivered','Delivered')+grp('Returned','Returned (remarks)')+grp('Pending','Pending (remarks)')+'<button class="b" onclick="reportPdf()">Download report (PDF)</button><button class="b s" onclick="copyRpt()">Copy as text</button>'}catch(e){alert(e.message)}}
+ grp('Delivered','Delivered')+grp('Returned','Returned')+grp('Pending','Pending')+'<button class="b" onclick="reportPdf()">Download report (PDF)</button>'}catch(e){$('rpt').innerHTML='<div class="c bd">'+esc(e.message)+'</div>'}}
 function openU(n){const x=rpt&&rpt.unresolved.find(r=>String(r.no)===String(n));if(x){tab(1);open_(x)}}
-function repLines(){const r=rpt,t=r.totals,L=['Picked up: '+t.picked+'   Delivered: '+t.delivered+'   Returned: '+t.returned+'   Pending: '+t.pending,'','PAYMENT','Total COD of delivered parcels: Rs '+t.cod,'- My D.C (delivered parcels): Rs '+t.dc,'- Online payments received: Rs '+t.online,'CASH I GIVE TO THE COMPANY: Rs '+t.cash,''];
- [['Delivered','DELIVERED'],['Returned','RETURNED'],['Pending','PENDING']].forEach(g=>{const x=r.rows.filter(y=>y.status===g[0]);if(x.length){L.push(g[1]+' ('+x.length+'):');x.forEach(y=>L.push('#'+y.no+' '+y.name+' - COD Rs '+y.cod+(g[0]==='Delivered'?' - D.C Rs '+y.dc+(y.online?' - online Rs '+y.online:''):(y.remarks?' - '+y.remarks:''))));L.push('')}});return L}
-function reportPdf(){pdf('Rider report - '+rpt.date,repLines(),'rider_report_'+rpt.date+'.pdf')}
-function copyRpt(){const t='Rider report '+rpt.date+'\n'+repLines().join('\n');if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>alert('Report copied. Paste it in WhatsApp.'),()=>prompt('Copy this report:',t));else prompt('Copy this report:',t)}
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Royal CEO</title>
+<link rel="manifest" href="manifest-ceo.json"><meta name="theme-color" content="#6a3fa0"><link rel="apple-touch-icon" href="icon-ceo-192.png">
 <style>
 :root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}
 @media(prefers-color-scheme:dark){:root{--bg:#11151b;--cd:#1b212a;--tx:#e8ecf2;--mu:#97a2b3;--pr:#4f8fcb;--ok:#4caf50;--bad:#ef7070;--wn:#e0a040;--bd:#313a47}}
@@ -29,7 +30,8 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 .bg.ok{background:#1a7f3722;color:var(--ok)}.bg.bad{background:#c6282822;color:var(--bad)}.bg.go{background:#1F4E7822;color:var(--pr)}.bg.wn{background:#b26a0022;color:var(--wn)}
 .ok{color:var(--ok)}.bd{color:var(--bad)}.mu{color:var(--mu);font-size:12px}.pg{display:none}.pg.on{display:block}
 #lg{max-width:360px;margin:70px auto}.lw{color:var(--wn);font-size:13px;margin-top:8px}
-</style></head><body>
+</style><script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script></head><body>
 <div id="lg" class="c"><h2>Royal CEO</h2><label>PIN</label><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()">
 <button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
 <div id="ap" hidden>
@@ -93,7 +95,9 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <div><div class="c"><h2>This month</h2><div class="r"><div><b class="ok">Cash in</b><div id="cbi"></div></div><div><b class="bd">Cash out</b><div id="cbo"></div></div></div></div>
 <div class="c sc"><h2>Recent expenses</h2><table class="tb"><tbody id="cel"></tbody></table></div>
 <div class="c sc"><h2>Recent payments received</h2><table class="tb"><tbody id="cpl"></tbody></table></div></div></div></div>
-<div class="pg" id="p-rep"><div class="c" style="max-width:520px"><h2>Excel download</h2><div class="r"><div><label>From</label><input id="f" type="date"></div><div><label>To</label><input id="e" type="date"></div></div>
+<div class="pg" id="p-rep"><div class="c"><h2>Reports</h2><div class="r"><div><label>From (optional)</label><input id="rf" type="date"></div><div><label>To (optional)</label><input id="rt" type="date"></div></div><p class="mu">Choose the dates for Expenses, Cash flow, Online orders and Khata reports. Stock and "all parties / vendors" show the position as of today.</p><div id="rlist"></div></div>
+<div class="c sc" id="rview" hidden></div>
+<div class="c" style="max-width:520px"><h2>Excel download</h2><div class="r"><div><label>From</label><input id="f" type="date"></div><div><label>To</label><input id="e" type="date"></div></div>
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
 <script>document.write('<script src="config.js?v='+Date.now()+'"><\/script>')</script>
@@ -207,10 +211,31 @@ async function bBill(){if(!confirm('Save the bill and close this batch?'))return
 
 login=async function(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{const s=await api('overview');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}};
 init=function(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');$('f').value=s.today.slice(0,8)+'01';$('e').value=s.today;nav('ov')};
-nav=function(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});if(p==='ov')loadOv();if(p==='orders')loadOrders();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()};
+nav=function(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});if(p==='ov')loadOv();if(p==='orders')loadOrders();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches();if(p==='rep'){if(!$('rlist').innerHTML)repRows();loadBals('party');loadBals('vendor')}};
 loadOrders=async function(){try{const r=await api('search',{q:$('q').value});ords=r.rows;const st=[...new Set(ords.map(x=>x.status||''))].filter(Boolean).sort();$('sf').innerHTML='<option value="">All status</option>'+st.map(x=>'<option>'+esc(x)+'</option>').join('');renderOrders()}catch(e){alert(e.message)}};
 async function loadOv(){try{const o=await api('overview');$('o1').textContent=money(o.inHand);$('o2').textContent=money(o.receivable);$('o3').textContent=money(o.payable);$('o4').textContent=money(o.cashIn)+' / '+money(o.cashOut);
  $('o5').textContent=o.tn;$('o6').textContent=money(o.tc);$('o7').textContent=o.mn;$('o8').textContent=money(o.mc);$('o9').innerHTML=Object.keys(o.status).map(k=>'<div class="cl"><span>'+badge(k)+'</span><b>'+o.status[k]+'</b></div>').join('')||'<div class="mu">No orders this month.</div>';
  $('o10').innerHTML=o.low.map(x=>'<div class="cl"><span>'+esc(x.n)+'</span><b class="'+(x.stock<=0?'bd':'wn')+'">'+x.stock+'</b></div>').join('')||'<div class="mu">Nothing low.</div>'}catch(e){alert(e.message)}}
+
+let lastRep=null;
+const REPS=[['party','Party khata - all parties',''],['party','Party khata - one party','ptl'],['vendor','Vendor khata - all vendors',''],['vendor','Vendor khata - one vendor','vtl'],['expense','Expenses report',''],['cash','Cash flow report',''],['stock','Stock report',''],['sales','Online orders report','']];
+function repRows(){$('rlist').innerHTML=REPS.map((x,i)=>'<div class="c" style="margin:10px 0"><b>'+x[1]+'</b>'+(x[2]?'<input id="rn'+i+'" list="'+x[2]+'" placeholder="'+(x[0]==='party'?'Party name':'Vendor name')+'" style="margin-top:6px">':'')+'<div class="r"><button class="b s" onclick="runRep('+i+',0)">View report</button><button class="b" onclick="runRep('+i+',1)">Download PDF</button></div></div>').join('')}
+async function runRep(i,pdf){const x=REPS[i],nm=x[2]?$('rn'+i).value.trim():'';if(x[2]&&!nm){alert('Select a '+(x[0]==='party'?'party':'vendor')+' first.');return}
+ try{const r=await api('report',{t:x[0],name:nm,from:$('rf').value,to:$('rt').value});lastRep=r;if(pdf)pdfRep(r);else viewRep(r)}catch(e){alert(e.message)}}
+const fmtc=c=>typeof c==='number'?money(c):esc(c);
+function viewRep(r){const v=$('rview');v.hidden=false;const al=(t,j)=>t.num&&t.num.indexOf(j)>=0?' style="text-align:right"':'';
+ v.innerHTML='<h2>'+esc(r.title)+'</h2><div class="mu">'+esc(r.sub)+'</div><div style="margin:10px 0">'+r.summary.map(s=>'<div class="cl"><span>'+esc(s[0])+'</span><b>'+fmtc(s[1])+'</b></div>').join('')+'</div>'+
+ r.tables.map(t=>(t.title?'<h2 style="margin-top:14px">'+esc(t.title)+'</h2>':'')+'<table class="tb"><thead><tr>'+t.cols.map((c,j)=>'<th'+al(t,j)+'>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+t.rows.map(row=>'<tr>'+row.map((c,j)=>'<td'+al(t,j)+'>'+fmtc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>').join('')+'<button class="b" onclick="pdfRep(lastRep)">Download PDF</button>';
+ v.scrollIntoView({behavior:'smooth'})}
+function pdfRep(r){const J=window.jspdf;if(!J||!J.jsPDF.API.autoTable){alert('PDF library could not load. Check internet and try again.');return}
+ const d=new J.jsPDF({unit:'pt',format:'a4'}),W=d.internal.pageSize.getWidth(),pm=c=>typeof c==='number'?money(c):String(c==null?'':c);
+ d.setFillColor(31,78,120);d.rect(0,0,W,56,'F');d.setTextColor(255,255,255);d.setFontSize(20);d.text('ROYAL WELCOME',40,36);
+ d.setTextColor(30,30,30);d.setFontSize(14);d.text(r.title,40,86);d.setFontSize(9);d.setTextColor(110,110,110);d.text(r.sub+'   |   Printed '+new Date().toISOString().slice(0,10),40,101);
+ d.autoTable({startY:112,body:r.summary.map(s=>[s[0],pm(s[1])]),theme:'plain',styles:{fontSize:10,cellPadding:3},columnStyles:{0:{fontStyle:'bold',cellWidth:230},1:{halign:'right'}},margin:{left:40,right:40}});
+ let y=d.lastAutoTable.finalY+14;
+ r.tables.forEach(t=>{if(t.title){d.setFontSize(11);d.setTextColor(30,30,30);d.text(t.title,40,y+10);y+=16}const cs={};(t.num||[]).forEach(j=>cs[j]={halign:'right'});
+  d.autoTable({startY:y,head:[t.cols],body:t.rows.map(row=>row.map(pm)),theme:'grid',headStyles:{fillColor:[31,78,120]},styles:{fontSize:9,cellPadding:4},columnStyles:cs,margin:{left:40,right:40}});y=d.lastAutoTable.finalY+18});
+ d.save(r.title.replace(/[^A-Za-z0-9]+/g,'_')+'.pdf')}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
 </script></body></html>

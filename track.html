@@ -1,34 +1,76 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Order Tracking</title>
-<style>:root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}@media(prefers-color-scheme:dark){:root{--bg:#11151b;--cd:#1b212a;--tx:#e8ecf2;--mu:#97a2b3;--pr:#4f8fcb;--ok:#4caf50;--bad:#ef7070;--wn:#e0a040;--bd:#313a47}}
+<link rel="manifest" href="manifest-track.json"><meta name="theme-color" content="#1F4E78"><link rel="apple-touch-icon" href="icon-track-192.png">
+<style>:root{--bg:#f2f4f8;--cd:#fff;--tx:#18212d;--mu:#667386;--pr:#1F4E78;--ok:#1a7f37;--bad:#c62828;--wn:#b26a00;--bd:#d8dde6}
+@media(prefers-color-scheme:dark){:root{--bg:#11151b;--cd:#1b212a;--tx:#e8ecf2;--mu:#97a2b3;--pr:#4f8fcb;--ok:#4caf50;--bad:#ef7070;--wn:#e0a040;--bd:#313a47}}
 *{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--tx);font:15px system-ui,sans-serif}
-header{background:var(--pr);color:#fff;display:flex;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px))}header b{font-size:18px;margin-right:auto}
+header{background:var(--pr);color:#fff;display:flex;align-items:center;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px))}header b{font-size:18px;margin-right:auto}header small{opacity:.85}
 .lo{background:rgba(255,255,255,.2);color:#fff;border:0;padding:7px 12px;border-radius:8px;font-weight:600;cursor:pointer}
-main{max-width:720px;margin:auto;padding:14px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+main{max-width:760px;margin:auto;padding:14px;padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
 .c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}h2{margin:0 0 8px;font-size:16px}
-input{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+label.m{display:block;margin:10px 0 3px;color:var(--mu);font-size:12px}
 .r{display:flex;gap:8px;align-items:center}.r>*{flex:1;min-width:0}
-button.b{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:13px 14px;font-size:15px;font-weight:600;width:100%;margin-top:8px;cursor:pointer}button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}button:disabled{opacity:.5}
+button.b,a.b{display:block;text-align:center;text-decoration:none;background:var(--pr);color:#fff;border:0;border-radius:10px;padding:12px 14px;font-size:15px;font-weight:600;width:100%;margin-top:8px;cursor:pointer}button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}button:disabled{opacity:.5}
 .bg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd);color:var(--tx)}.bg.ok{background:#1a7f3722;color:var(--ok)}.bg.bad{background:#c6282822;color:var(--bad)}.bg.go{background:#1F4E7822;color:var(--pr)}.bg.wn{background:#b26a0022;color:var(--wn)}
 .cl{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.mu{color:var(--mu);font-size:12px}.bd{color:var(--bad)}.ok{color:var(--ok)}a{color:var(--pr)}
-.k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.k div{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px}.k small{color:var(--mu);display:block}.k b{font-size:19px}
-#lg{max-width:360px;margin:70px auto}</style></head><body>
-<div id="lg" class="c"><h2>Order Tracking</h2><input id="pin" type="password" inputmode="numeric" placeholder="PIN" onkeydown="if(event.key==='Enter')login()"><button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
-<div id="ap" hidden><header><b>Order Tracking</b><button class="lo" onclick="logout()">Log out</button></header>
-<main><div class="c"><input id="q" placeholder="Order no, phone number or tracking number" onkeydown="if(event.key==='Enter')go()"><button class="b" onclick="go()">Search</button>
-<button class="b s" id="sy" onclick="sync()">Update status from PostEx</button><div id="sm" class="mu" style="margin-top:6px"></div></div><div id="res"></div></main></div>
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:9}.ov>.c{width:100%;max-width:520px;max-height:92vh;overflow:auto;margin:0;border-radius:16px 16px 0 0}
+#lg{max-width:360px;margin:70px auto}
+
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}.tabs button{flex:none;border:1px solid var(--bd);background:var(--cd);color:var(--tx);padding:9px 12px;border-radius:99px;font-weight:600;font-size:13px;cursor:pointer}.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.star{background:none;border:0;font-size:26px;line-height:1;color:var(--mu);cursor:pointer;padding:0 4px}.star.on{color:#e6a700}
+a.wa{background:#25D366;color:#fff}.hn{background:#e6a70022;border-radius:8px;padding:6px 8px;margin-top:6px;font-size:13px}
+</style></head><body>
+<div id="lg" class="c"><h2>Order Tracking</h2><label class="m">Your name</label><input id="un" autocomplete="username"><label class="m">PIN</label><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()">
+<button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
+<div id="ap" hidden><header><b>Order Tracking</b><small id="who"></small><button class="lo" onclick="logout()">Log out</button></header>
+<main><div class="tabs" id="tb"></div>
+<div id="sv"><div class="c"><input id="q" placeholder="Order no, phone number or tracking number" onkeydown="if(event.key==='Enter')go()"><button class="b" onclick="go()">Search</button>
+<button class="b s" id="sy" onclick="sync()">Update status from PostEx</button><div id="sm" class="mu" style="margin-top:6px"></div></div></div>
+<div id="res"></div></main></div>
+<div id="hm" class="ov" hidden><div class="c"><h2 id="hmt">Highlight</h2><label class="m">Reason for highlighting</label><textarea id="hmn" rows="3" placeholder="e.g. customer called twice, check delivery"></textarea>
+<button class="b" onclick="hlSave()">Save highlight</button><button class="b s" id="hmr" onclick="hlRemove()">Remove highlight</button><button class="b s" onclick="$('hm').hidden=true">Cancel</button></div></div>
 <script>document.write('<script src="config.js?v='+Date.now()+'"><\/script>')</script>
-<script>const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const $=i=>document.getElementById(i);const money=n=>Number(n||0).toLocaleString('en-US');let pin='';
-async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be in the repo root, next to the app folders.');let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
+<script>
+const RIDER_PHONE='03228840467',WA='https://wa.me/923096302212',SITE='https://royalwelcome.shop/',TRK='https://postextracking.com.pk/';
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const $=i=>document.getElementById(i);const money=n=>Number(n||0).toLocaleString('en-US');
+let user='',pin='',L=null,HLS={},cur='s',sres=[],hlNo=0;
+async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be next to this file in the repo.');let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,u:user,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page. Check the config.js URL and that Web App access is Anyone.')}if(j.error)throw new Error(j.error);return j}
-function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/^deliver/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
-function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
-function card(x){return '<div class="c"><div class="r" style="justify-content:space-between"><b style="font-size:17px">#'+x.no+'</b><span style="text-align:right">'+badge(x.status)+'</span></div>'+
- '<div style="margin-top:6px">'+esc(x.name)+' &middot; <a href="tel:'+esc(x.phone)+'">'+esc(x.phone)+'</a></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div>'+
+function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/^delivered$/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
+function logout(){try{sessionStorage.clear()}catch(e){}location.reload()}
+function waNum(p){const d=String(p||'').replace(/\D/g,'');if(d.indexOf('92')===0)return d;if(d[0]==='0')return '92'+d.slice(1);if(d.length===10&&d[0]==='3')return '92'+d;return d}
+function detail(x){const it=String(x.items||'').split(',').map(s=>s.trim()).filter(Boolean);return 'Order detail:\n'+it.map(s=>'- '+s).join('\n')+'\nAmount: Rs '+(x.amount||0)+'\nDelivery charges: Rs '+(x.dc||0)+(+x.adv?'\nAdvance: Rs '+x.adv:'')+'\nCOD: Rs '+(x.cod||0)}
+function msg(x){const st=String(x.status||'').trim(),hi='Assalam o Alaikum '+x.name+',\n',help='\nParcel ki detail ke liye WhatsApp karein:\n'+WA+'\n\n- Royal Welcome\nHamari website: '+SITE;
+ if(/^delivered$/i.test(st))return hi+'Aapka order #'+x.no+' deliver ho chuka hai. Shukriya!\n\n'+detail(x)+'\n'+help;
+ if(/^(returned|cancel+ed|cancal)$/i.test(st))return hi+'Aapka order #'+x.no+' wapis (return) ho gaya hai.\n\n'+detail(x)+'\n'+help;
+ if(x.delivery==='RIDER')return hi+'Aapka order #'+x.no+' process mein hai.\nCOD: Rs '+x.cod+'\nAapko 48 ghanton ke andar parcel mil jayega.\nRider ka number: '+RIDER_PHONE+'\n\n'+detail(x)+'\n'+help;
+ if(!x.tracking)return hi+'Aapka order #'+x.no+' process mein hai.\nCOD: Rs '+x.cod+'\nParcel jald rawana kar diya jayega.\n\n'+detail(x)+'\n'+help;
+ return hi+'Aapka order #'+x.no+' rawana ho chuka hai.\nStatus: '+(st||'Booked')+'\nTracking ID: '+x.tracking+'\nParcel yahan track karein (Tracking ID copy kar ke paste karein):\n'+TRK+'\nCOD: Rs '+x.cod+'\nMeherbani kar ke parcel receive karte waqt payment tayyar rakhein.\n\n'+detail(x)+'\n'+help}
+function card(x){const on=HLS[x.no]!==undefined,by=x.by?' data-by="'+esc(x.by)+'"':'';
+ return '<div class="c"><div class="r" style="justify-content:space-between"><b style="font-size:17px">#'+x.no+'</b><span style="flex:none;display:flex;gap:6px;align-items:center">'+badge(x.status)+'<button class="star'+(on||x.by?' on':'')+'" data-n="'+x.no+'"'+by+' onclick="star(this)" title="Highlight">'+(on||x.by?'&#9733;':'&#9734;')+'</button></span></div>'+
+ '<div style="margin-top:4px">'+esc(x.name)+' &middot; <a href="tel:'+esc(x.phone)+'">'+esc(x.phone)+'</a></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div>'+
  '<div style="margin:8px 0">'+esc(x.items)+'</div><div class="cl"><span>Amount + D.C &minus; Advance</span><span>'+money(x.amount)+' + '+money(x.dc)+' &minus; '+money(x.adv)+'</span></div>'+
- (x.remarks?'<div class="mu">Remarks: '+esc(x.remarks)+'</div>':'')+'<div class="cl"><b>COD</b><b>'+money(x.cod)+'</b></div><div class="cl"><span>Tracking</span><span>'+(esc(x.tracking)||'-')+'</span></div>'+
- '<div class="mu" style="margin-top:6px">'+esc(x.date)+' &middot; '+(x.delivery==='RIDER'?'Rider (Lahore)':'PostEx')+' &middot; updated '+esc(x.synced||'-')+'</div></div>'}
-async function go(){try{const r=await api('search',{q:$('q').value});$('res').innerHTML=r.rows.map(card).join('')||'<div class="c mu">No order found.</div>'}catch(e){alert(e.message)}}
-async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{await api('search',{q:'x@@'});try{sessionStorage.setItem('pin',pin)}catch(e){}$('lg').hidden=true;$('ap').hidden=false;go()}catch(e){$('le').textContent=e.message}}
-async function sync(){$('sy').disabled=true;$('sm').textContent='Updating from PostEx...';try{const r=await api('sync');$('sm').textContent='Tracking found: '+r.tracked+' | Status updated: '+r.updated;go()}catch(e){$('sm').textContent=e.message}$('sy').disabled=false}
-try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
+ '<div class="cl"><b>COD</b><b>'+money(x.cod)+'</b></div><div class="cl"><span>Tracking</span><span>'+(esc(x.tracking)||'-')+'</span></div>'+
+ (x.remarks?'<div class="mu">Rider remarks: '+esc(x.remarks)+'</div>':'')+(x.by?'<div class="hn"><b>'+esc(x.by)+':</b> '+esc(x.note)+'</div>':(on&&HLS[x.no]?'<div class="hn">Your note: '+esc(HLS[x.no])+'</div>':''))+
+ '<div class="mu" style="margin-top:6px">'+esc(x.date)+' &middot; '+(x.delivery==='RIDER'?'Rider (Lahore)':'PostEx')+' &middot; updated '+esc(x.synced||'-')+'</div>'+
+ '<a class="b wa" target="_blank" href="https://wa.me/'+waNum(x.phone)+'?text='+encodeURIComponent(msg(x))+'">Send WhatsApp message</a></div>'}
+const cards=a=>a.map(card).join('')||'<div class="c mu">Nothing here.</div>';
+async function login(){user=$('un').value.trim()||user;pin=$('pin').value.trim()||pin;$('le').textContent='';if(!user){$('le').textContent='Enter your name';return}
+ try{await loadLists();try{sessionStorage.setItem('tu',user);sessionStorage.setItem('pin',pin)}catch(e){}$('lg').hidden=true;$('ap').hidden=false;$('who').textContent=L.user+(L.admin?' (admin)':'');tab('s')}catch(e){$('le').textContent=e.message}}
+async function loadLists(){L=await api('trackLists');HLS=L.hlSet||{}}
+function tab(n){cur=n;const T=[['s','Search'],['o','Out for delivery ('+L.out.length+')'],['r','Recent ('+L.recent.length+')'],['a','Attempt ('+L.attempt.length+')'],['h','Highlights ('+L.hl.length+')']];
+ $('tb').innerHTML=T.map(t=>'<button class="'+(t[0]===n?'on':'')+'" onclick="tab(\''+t[0]+'\')">'+t[1]+'</button>').join('');$('sv').hidden=n!=='s';
+ $('res').innerHTML=n==='s'?cards(sres):n==='o'?cards(L.out):n==='r'?'<div class="mu" style="margin:0 0 8px">Orders of '+esc(L.lastDate)+'</div>'+cards(L.recent):n==='a'?cards(L.attempt):(L.admin?'<div class="mu" style="margin:0 0 8px">Admin view: highlights of everyone</div>':'')+cards(L.hl)}
+async function go(){try{const r=await api('search',{q:$('q').value});sres=r.rows;HLS=r.hlSet||HLS;tab('s')}catch(e){alert(e.message)}}
+async function sync(){$('sy').disabled=true;$('sm').textContent='Updating from PostEx...';try{const r=await api('sync');$('sm').textContent='Tracking found: '+r.tracked+' | Status updated: '+r.updated;await loadLists();go()}catch(e){$('sm').textContent=e.message}$('sy').disabled=false}
+let hlBy='';
+function star(b){const no=b.dataset.n,by=b.dataset.by||'';hlNo=+no;hlBy=by;
+ if(by&&by.toLowerCase()!==L.user.toLowerCase()){if(confirm('Remove the highlight made by '+by+'?'))hlOff(by);return}
+ $('hmt').textContent='Highlight order #'+no;$('hmn').value=HLS[no]||'';$('hmr').hidden=HLS[no]===undefined;$('hm').hidden=false}
+async function hlSave(){const n=$('hmn').value.trim();if(!n){alert('Please write the reason.');return}try{await api('hlSet',{order:hlNo,on:true,note:n});$('hm').hidden=true;await refresh()}catch(e){alert(e.message)}}
+async function hlRemove(){await hlOff('')}
+async function hlOff(by){try{await api('hlSet',{order:hlNo,on:false,by:by});$('hm').hidden=true;await refresh()}catch(e){alert(e.message)}}
+async function refresh(){await loadLists();if(cur==='s'&&sres.length){const r=await api('search',{q:$('q').value});sres=r.rows;HLS=r.hlSet||HLS}tab(cur)}
+try{user=sessionStorage.getItem('tu')||'';pin=sessionStorage.getItem('pin')||'';if(user&&pin){$('un').value=user;login()}}catch(e){}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

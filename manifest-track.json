@@ -1,0 +1,23 @@
+{
+ "name": "Order Tracking",
+ "short_name": "Track",
+ "start_url": "track.html",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#f2f4f8",
+ "theme_color": "#1F4E78",
+ "icons": [
+  {
+   "src": "icon-track-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-track-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  }
+ ]
+}

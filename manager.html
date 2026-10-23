@@ -54,6 +54,7 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <div class="pg" id="p-rider"><div class="g"><div class="c"><h2>Bulk status update</h2><p class="mu">Tick parcels (or paste order numbers), choose a status, apply.</p>
 <label>Extra order numbers (comma / space / new line)</label><textarea id="rn" rows="3"></textarea><label>New status</label><select id="rst"></select>
 <button class="b" onclick="riderApply()">Apply to selected</button><div id="rm" style="margin-top:8px;font-size:14px"></div></div>
+<div class="c"><h2>Change rider D.C</h2><p class="mu">The rider cannot change his D.C after pickup. You can.</p><div class="r"><div><label>Order no</label><input id="rdo" type="number" inputmode="numeric"></div><div><label>Rider D.C</label><input id="rdv" type="number" inputmode="numeric"></div></div><button class="b s" onclick="riderDcSave()">Save D.C</button></div>
 <div class="c sc"><div class="r" style="align-items:center"><h2 style="flex:1">Open rider parcels</h2><label style="margin:0"><input type="checkbox" id="ra" style="width:auto" onchange="selAll()"> Select all</label></div>
 <table class="tb"><tbody id="rb"></tbody></table></div></div><div class="c"><h2>Rider account (D.C payable to the rider)</h2><div class="k"><div><small>Earned (delivered parcels)</small><b id="ra1">0</b></div><div><small>Paid</small><b id="ra2">0</b></div><div><small>Balance due</small><b id="ra3">0</b></div></div>
 <div class="r"><div><label>Amount paid</label><input id="rpa" type="number" inputmode="numeric"></div><div><label>Date</label><input id="rpd" type="date"></div></div><label>Note</label><input id="rpn">
@@ -222,6 +223,7 @@ async function bBill(){if(!confirm('Save the bill and close this batch?'))return
  alert('Batch closed.\n'+(r.kind==='LABOUR'?'Labour bill ':'Material bill ')+money(r.amount)+' + materials sent '+money(r.pack)+' over '+r.received+' pieces = '+money(r.unit)+' per piece.\nCost price updated in Products.'+(r.received!==r.planned?'\nNote: planned was '+r.planned+', received '+r.received+'.':''));
  ['bbn','bbk','bbr'].forEach(k=>$(k).value='');calcBB();const id=$('bsel').value;await loadBatches();pickBatch(id)}catch(e){alert(e.message)}}
 
+async function riderDcSave(){try{await api('riderDc',{order:$('rdo').value,dc:$('rdv').value});alert('Rider D.C saved.');$('rdo').value='';$('rdv').value='';loadRider();loadRiderAcct()}catch(e){alert(e.message)}}
 async function loadRiderAcct(){try{const a=await api('riderAccount');$('ra1').textContent=money(a.earned);$('ra2').textContent=money(a.paid);$('ra3').textContent=money(a.bal);
  $('rpl').innerHTML=a.pays.map(x=>'<div class="cl"><span>'+esc(x.date)+(x.note?' &middot; '+esc(x.note):'')+'</span><b>'+money(x.amt)+'</b></div>').join('')}catch(e){}}
 async function rPay(){try{await api('riderPay',{amount:$('rpa').value,date:$('rpd').value,note:$('rpn').value});['rpa','rpn'].forEach(k=>$(k).value='');loadRiderAcct()}catch(e){alert(e.message)}}
