@@ -35,7 +35,7 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <div id="lg" class="c"><h2>Royal CEO</h2><label>PIN</label><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()">
 <button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
 <div id="ap" hidden>
-<header><b>Royal CEO (view only)</b><nav id="nv"></nav><button class="lo" onclick="logout()">Log out</button></header>
+<header><b>Royal CEO (view only)</b><nav id="nv"></nav><button class="lo" id="rfp" onclick="rfp()" title="Get the latest data">&#8635; Refresh</button><button class="lo" onclick="logout()">Log out</button></header>
 <main>
 <div class="pg" id="p-ov"><div class="k k4"><div><small>Cash in hand</small><b id="o1">0</b></div><div><small>Parties owe us</small><b id="o2">0</b></div><div><small>We owe vendors</small><b id="o3">0</b></div><div><small>Month cash in / out</small><b id="o4">0</b></div></div>
 <div class="k k4"><div><small>Orders today</small><b id="o5">0</b></div><div><small>COD today</small><b id="o6">0</b></div><div><small>Orders this month</small><b id="o7">0</b></div><div><small>COD this month</small><b id="o8">0</b></div></div>
@@ -107,14 +107,14 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const PG=[['ov','Overview'],['orders','Orders'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
 const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
 async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be in the repo root, next to the app folders.');if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
- let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
+ let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin,fresh:window.FRESH?1:0},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page instead of data. Check that the API URL ends with /exec and the Web App access is "Anyone", then redeploy.')}
  if(j.error)throw new Error(j.error);return j}
 function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/deliver(ed)?$/i.test(s)&&!/out/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
 async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';
  try{const s=await api('state');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}}
 function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
-function nav(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
+function nav(p){window.CUR=p;PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
  if(p==='orders')loadOrders();if(p==='rider')loadRider();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()}
 function init(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');
  $('pl').innerHTML=s.products.map(p=>{pr[p.n.toUpperCase()]=p.p;return '<option value="'+esc(p.n)+'">'}).join('');
@@ -211,7 +211,7 @@ async function bBill(){if(!confirm('Save the bill and close this batch?'))return
 
 login=async function(){pin=$('pin').value.trim()||pin;$('le').textContent='';try{const s=await api('overview');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}};
 init=function(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');$('f').value=s.today.slice(0,8)+'01';$('e').value=s.today;nav('ov')};
-nav=function(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});if(p==='ov')loadOv();if(p==='orders')loadOrders();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches();if(p==='rep'){if(!$('rlist').innerHTML)repRows();loadBals('party');loadBals('vendor')}};
+nav=function(p){window.CUR=p;PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});if(p==='ov')loadOv();if(p==='orders')loadOrders();if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches();if(p==='rep'){if(!$('rlist').innerHTML)repRows();loadBals('party');loadBals('vendor')}};
 loadOrders=async function(){try{const r=await api('search',{q:$('q').value});ords=r.rows;const st=[...new Set(ords.map(x=>x.status||''))].filter(Boolean).sort();$('sf').innerHTML='<option value="">All status</option>'+st.map(x=>'<option>'+esc(x)+'</option>').join('');renderOrders()}catch(e){alert(e.message)}};
 async function loadOv(){try{const o=await api('overview');$('o1').textContent=money(o.inHand);$('o2').textContent=money(o.receivable);$('o3').textContent=money(o.payable);$('o4').textContent=money(o.cashIn)+' / '+money(o.cashOut);
  $('o5').textContent=o.tn;$('o6').textContent=money(o.tc);$('o7').textContent=o.mn;$('o8').textContent=money(o.mc);$('o9').innerHTML=Object.keys(o.status).map(k=>'<div class="cl"><span>'+badge(k)+'</span><b>'+o.status[k]+'</b></div>').join('')||'<div class="mu">No orders this month.</div>';
@@ -237,5 +237,6 @@ function pdfRep(r){const J=window.jspdf;if(!J||!J.jsPDF.API.autoTable){alert('PD
   d.autoTable({startY:y,head:[t.cols],body:t.rows.map(row=>row.map(pm)),theme:'grid',headStyles:{fillColor:[31,78,120]},styles:{fontSize:9,cellPadding:4},columnStyles:cs,margin:{left:40,right:40}});y=d.lastAutoTable.finalY+18});
  d.save(r.title.replace(/[^A-Za-z0-9]+/g,'_')+'.pdf')}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+function rfp(){window.FRESH=1;const b=$('rfp');b.disabled=true;nav(window.CUR||'orders');setTimeout(()=>{window.FRESH=0;b.disabled=false},5000)}
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
 </script></body></html>

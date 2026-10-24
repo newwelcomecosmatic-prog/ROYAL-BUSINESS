@@ -19,25 +19,29 @@ button.b,a.b{display:block;text-align:center;text-decoration:none;background:var
 .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}.tabs button{flex:none;border:1px solid var(--bd);background:var(--cd);color:var(--tx);padding:9px 12px;border-radius:99px;font-weight:600;font-size:13px;cursor:pointer}.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
 .star{background:none;border:0;font-size:26px;line-height:1;color:var(--mu);cursor:pointer;padding:0 4px}.star.on{color:#e6a700}
 a.wa{background:#25D366;color:#fff}.hn{background:#e6a70022;border-radius:8px;padding:6px 8px;margin-top:6px;font-size:13px}
+.ch{display:inline-flex;gap:4px;align-items:center;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;cursor:pointer;white-space:nowrap}.ch.ok{background:#1a7f3722;color:var(--ok)}.ch.bad{background:#c6282822;color:var(--bad)}.ch.new{background:var(--bd);color:var(--mu)}
+.k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.k div{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}.k small{color:var(--mu);display:block}.k b{font-size:18px}
+#dp{display:none}.tbl{width:100%;border-collapse:collapse;font-size:13.5px}.tbl th{text-align:left;color:var(--mu);font-weight:600;padding:9px 8px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--cd)}.tbl td{padding:8px;border-bottom:1px solid var(--bd);vertical-align:middle}.tbl tr{cursor:pointer}.tbl tr:hover{background:var(--bg)}.tbl tr.sel{background:#1F4E7822}
+a.wa2{background:#25D366;color:#fff;text-decoration:none;font-weight:600;font-size:12px;padding:5px 9px;border-radius:8px;white-space:nowrap}header .lo{margin-left:4px}
+@media(min-width:1000px){main{max-width:none;display:grid;grid-template-columns:210px minmax(0,1fr) 400px;gap:16px;padding:16px 20px}.tabs{flex-direction:column;overflow:visible;margin:0}.tabs button{border-radius:10px;text-align:left;padding:11px 14px}#dp{display:block;position:sticky;top:12px;align-self:start;max-height:calc(100vh - 90px);overflow:auto}#dp .c{margin:0}}
 </style></head><body>
 <div id="lg" class="c"><h2>Order Tracking</h2><label class="m">Your name</label><input id="un" autocomplete="username"><label class="m">PIN</label><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()">
 <button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
-<div id="ap" hidden><header><b>Order Tracking</b><small id="who"></small><button class="lo" onclick="logout()">Log out</button></header>
-<main><div class="tabs" id="tb"></div>
-<div id="sv"><div class="c"><input id="q" placeholder="Order no, phone number or tracking number" onkeydown="if(event.key==='Enter')go()"><button class="b" onclick="go()">Search</button>
-<button class="b s" id="sy" onclick="sync()">Update status from PostEx</button><div id="sm" class="mu" style="margin-top:6px"></div></div></div>
-<div id="res"></div></main></div>
+<div id="ap" hidden><header><b>Order Tracking</b><small id="who"></small><small id="upd"></small><button class="lo" id="rfb" onclick="manualRefresh()">&#8635; Refresh</button><button class="lo" onclick="logout()">Log out</button></header>
+<main><div class="tabs" id="tb"></div><div id="mid"><div id="sv"><div class="c"><input id="q" placeholder="Order no, phone number or tracking number" onkeydown="if(event.key==='Enter')go()"><button class="b" onclick="go()">Search</button>
+<button class="b s" id="sy" onclick="sync()">Update status from PostEx</button><div id="sm" class="mu" style="margin-top:6px"></div></div></div><div id="res"></div></div><div id="dp" class="mu">Select an order to see its detail here.</div></main></div>
 <div id="hm" class="ov" hidden><div class="c"><h2 id="hmt">Highlight</h2><label class="m">Reason for highlighting</label><textarea id="hmn" rows="3" placeholder="e.g. customer called twice, check delivery"></textarea>
 <button class="b" onclick="hlSave()">Save highlight</button><button class="b s" id="hmr" onclick="hlRemove()">Remove highlight</button><button class="b s" onclick="$('hm').hidden=true">Cancel</button></div></div>
+<div id="cm" class="ov" hidden><div class="c" id="cmb"></div></div>
 <script>document.write('<script src="config.js?v='+Date.now()+'"><\/script>')</script>
 <script>
 const RIDER_PHONE='03228840467',WA='https://wa.me/923096302212',SITE='https://royalwelcome.shop/',TRK='https://postextracking.com.pk/';
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');const $=i=>document.getElementById(i);const money=n=>Number(n||0).toLocaleString('en-US');
-let user='',pin='',L=null,HLS={},cur='s',sres=[],hlNo=0;
+let user='',pin='',L=null,HLS={},cur='s',sres=[],hlNo=0,idx={},sel=0;const wide=()=>window.matchMedia('(min-width:1000px)').matches,SNAP=()=>'trk_'+user.toLowerCase();
 async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be next to this file in the repo.');let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,u:user,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page. Check the config.js URL and that Web App access is Anyone.')}if(j.error)throw new Error(j.error);return j}
 function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/^delivered$/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
-function logout(){try{sessionStorage.clear()}catch(e){}location.reload()}
+function logout(){try{localStorage.removeItem(SNAP());sessionStorage.clear()}catch(e){}location.reload()}
 function waNum(p){const d=String(p||'').replace(/\D/g,'');if(d.indexOf('92')===0)return d;if(d[0]==='0')return '92'+d.slice(1);if(d.length===10&&d[0]==='3')return '92'+d;return d}
 function detail(x){const it=String(x.items||'').split(',').map(s=>s.trim()).filter(Boolean);return 'Order detail:\n'+it.map(s=>'- '+s).join('\n')+'\nAmount: Rs '+(x.amount||0)+'\nDelivery charges: Rs '+(x.dc||0)+(+x.adv?'\nAdvance: Rs '+x.adv:'')+'\nCOD: Rs '+(x.cod||0)}
 function msg(x){const st=String(x.status||'').trim(),hi='Assalam o Alaikum '+x.name+',\n',help='\nParcel ki detail ke liye WhatsApp karein:\n'+WA+'\n\n- Royal Welcome\nHamari website: '+SITE;
@@ -47,7 +51,7 @@ function msg(x){const st=String(x.status||'').trim(),hi='Assalam o Alaikum '+x.n
  if(!x.tracking)return hi+'Aapka order #'+x.no+' process mein hai.\nCOD: Rs '+x.cod+'\nParcel jald rawana kar diya jayega.\n\n'+detail(x)+'\n'+help;
  return hi+'Aapka order #'+x.no+' rawana ho chuka hai.\nStatus: '+(st||'Booked')+'\nTracking ID: '+x.tracking+'\nParcel yahan track karein (Tracking ID copy kar ke paste karein):\n'+TRK+'\nCOD: Rs '+x.cod+'\nMeherbani kar ke parcel receive karte waqt payment tayyar rakhein.\n\n'+detail(x)+'\n'+help}
 function card(x){const on=HLS[x.no]!==undefined,by=x.by?' data-by="'+esc(x.by)+'"':'';
- return '<div class="c"><div class="r" style="justify-content:space-between"><b style="font-size:17px">#'+x.no+'</b><span style="flex:none;display:flex;gap:6px;align-items:center">'+badge(x.status)+'<button class="star'+(on||x.by?' on':'')+'" data-n="'+x.no+'"'+by+' onclick="star(this)" title="Highlight">'+(on||x.by?'&#9733;':'&#9734;')+'</button></span></div>'+
+ return '<div class="c"><div class="r" style="justify-content:space-between"><b style="font-size:17px">#'+x.no+'</b> '+cb(x)+'<span style="flex:none;display:flex;gap:6px;align-items:center">'+badge(x.status)+'<button class="star'+(on||x.by?' on':'')+'" data-n="'+x.no+'"'+by+' onclick="star(this)" title="Highlight">'+(on||x.by?'&#9733;':'&#9734;')+'</button></span></div>'+
  '<div style="margin-top:4px">'+esc(x.name)+' &middot; <a href="tel:'+esc(x.phone)+'">'+esc(x.phone)+'</a></div><div class="mu">'+esc(x.city)+' &middot; '+esc(x.address)+'</div>'+
  '<div style="margin:8px 0">'+esc(x.items)+'</div><div class="cl"><span>Amount + D.C &minus; Advance</span><span>'+money(x.amount)+' + '+money(x.dc)+' &minus; '+money(x.adv)+'</span></div>'+
  '<div class="cl"><b>COD</b><b>'+money(x.cod)+'</b></div><div class="cl"><span>Tracking</span><span>'+(esc(x.tracking)||'-')+'</span></div>'+
@@ -55,12 +59,27 @@ function card(x){const on=HLS[x.no]!==undefined,by=x.by?' data-by="'+esc(x.by)+'
  '<div class="mu" style="margin-top:6px">'+esc(x.date)+' &middot; '+(x.delivery==='RIDER'?'Rider (Lahore)':'PostEx')+' &middot; updated '+esc(x.synced||'-')+'</div>'+
  '<a class="b wa" target="_blank" href="https://wa.me/'+waNum(x.phone)+'?text='+encodeURIComponent(msg(x))+'">Send WhatsApp message</a></div>'}
 const cards=a=>a.map(card).join('')||'<div class="c mu">Nothing here.</div>';
+function cb(x){const c=x.cust;if(!c)return '';const f=c.d+c.r+c.c;let cls='new',sym='New &middot; ';if(f>0){if(c.d/f>0.5){cls='ok';sym='&#10003; '}else{cls='bad';sym='&#10007; '}}
+ return '<span class="ch '+cls+'" data-p="'+esc(x.phone)+'" title="Customer history" onclick="hist(this,event)">'+sym+c.t+' order'+(c.t>1?'s':'')+'</span>'}
+async function hist(el,ev){ev.stopPropagation();try{const r=await api('custHistory',{phone:el.dataset.p}),c=r.stats,f=c.d+c.r+c.c;
+ $('cmb').innerHTML='<h2>Customer history</h2><div class="mu">'+esc(el.dataset.p)+'</div><div class="k"><div><small>Total orders</small><b>'+c.t+'</b></div><div><small>Delivered</small><b class="ok">'+c.d+'</b></div><div><small>Delivered rate</small><b>'+(f?Math.round(c.d*100/f)+'%':'-')+'</b></div><div><small>Returned</small><b class="bd">'+c.r+'</b></div><div><small>Cancelled</small><b class="bd">'+c.c+'</b></div><div><small>In process</small><b>'+c.o+'</b></div></div>'+
+ r.orders.map(o=>'<div class="cl"><span>#'+o.no+' &middot; '+esc(o.date)+'<br><span class="mu">'+esc(o.items)+'</span></span><span style="text-align:right">'+badge(o.status)+'<br><b>'+money(o.cod)+'</b></span></div>').join('')+'<button class="b s" onclick="$(\'cm\').hidden=true">Close</button>';$('cm').hidden=false}catch(e){alert(e.message)}}
+const stamp=t=>new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+function showApp(){$('lg').hidden=true;$('ap').hidden=false;$('who').textContent=L.user+(L.admin?' (admin)':'')}
+async function loadLists(fresh){L=await api('trackLists',fresh?{fresh:1}:{});HLS=L.hlSet||{};try{localStorage.setItem(SNAP(),JSON.stringify({t:Date.now(),L:L}))}catch(e){}$('upd').textContent='Updated '+stamp(Date.now())}
 async function login(){user=$('un').value.trim()||user;pin=$('pin').value.trim()||pin;$('le').textContent='';if(!user){$('le').textContent='Enter your name';return}
- try{await loadLists();try{sessionStorage.setItem('tu',user);sessionStorage.setItem('pin',pin)}catch(e){}$('lg').hidden=true;$('ap').hidden=false;$('who').textContent=L.user+(L.admin?' (admin)':'');tab('s')}catch(e){$('le').textContent=e.message}}
-async function loadLists(){L=await api('trackLists');HLS=L.hlSet||{}}
+ try{await loadLists();try{sessionStorage.setItem('tu',user);sessionStorage.setItem('pin',pin)}catch(e){}showApp();tab('s')}catch(e){$('le').textContent=e.message}}
+async function manualRefresh(){const b=$('rfb');b.disabled=true;b.textContent='...';try{await loadLists(true);if(cur==='s'&&sres.length){const r=await api('search',{q:$('q').value});sres=r.rows;HLS=r.hlSet||HLS}tab(cur)}catch(e){alert(e.message)}b.disabled=false;b.innerHTML='&#8635; Refresh'}
 function tab(n){cur=n;const T=[['s','Search'],['o','Out for delivery ('+L.out.length+')'],['r','Recent ('+L.recent.length+')'],['a','Attempt ('+L.attempt.length+')'],['h','Highlights ('+L.hl.length+')']];
  $('tb').innerHTML=T.map(t=>'<button class="'+(t[0]===n?'on':'')+'" onclick="tab(\''+t[0]+'\')">'+t[1]+'</button>').join('');$('sv').hidden=n!=='s';
- $('res').innerHTML=n==='s'?cards(sres):n==='o'?cards(L.out):n==='r'?'<div class="mu" style="margin:0 0 8px">Orders of '+esc(L.lastDate)+'</div>'+cards(L.recent):n==='a'?cards(L.attempt):(L.admin?'<div class="mu" style="margin:0 0 8px">Admin view: highlights of everyone</div>':'')+cards(L.hl)}
+ const list=n==='s'?sres:n==='o'?L.out:n==='r'?L.recent:n==='a'?L.attempt:L.hl;idx={};list.forEach(x=>idx[x.no]=x);
+ const head=n==='r'?'<div class="mu" style="margin:0 0 8px">Orders of '+esc(L.lastDate)+'</div>':(n==='h'&&L.admin?'<div class="mu" style="margin:0 0 8px">Admin view: highlights of everyone</div>':'');
+ $('res').innerHTML=head+(wide()?table(list):cards(list));if(wide()){if(sel&&idx[sel])pick(sel);else $('dp').innerHTML='<div class="mu" style="padding:8px">Select an order to see its detail here.</div>'}}
+function table(a){if(!a.length)return '<div class="c mu">Nothing here.</div>';
+ return '<div class="c" style="padding:0;overflow:auto"><table class="tbl"><thead><tr><th></th><th>Order</th><th>Customer</th><th>City</th><th>Status</th><th>Tracking</th><th>COD</th><th>History</th><th></th></tr></thead><tbody>'+a.map(x=>{const on=HLS[x.no]!==undefined||x.by;
+  return '<tr data-n="'+x.no+'" onclick="pick(this.dataset.n)"><td><button class="star'+(on?' on':'')+'" data-n="'+x.no+'"'+(x.by?' data-by="'+esc(x.by)+'"':'')+' onclick="event.stopPropagation();star(this)">'+(on?'&#9733;':'&#9734;')+'</button></td><td><b>#'+x.no+'</b><br><span class="mu">'+esc(x.date)+'</span></td><td>'+esc(x.name)+'<br><span class="mu">'+esc(x.phone)+'</span></td><td>'+esc(x.city)+'</td><td>'+badge(x.status)+'</td><td>'+esc(x.tracking||'-')+'</td><td><b>'+money(x.cod)+'</b></td><td>'+cb(x)+'</td><td><a class="wa2" target="_blank" onclick="event.stopPropagation()" href="https://wa.me/'+waNum(x.phone)+'?text='+encodeURIComponent(msg(x))+'">WhatsApp</a></td></tr>'}).join('')+'</tbody></table></div>'}
+function pick(n){sel=+n;const x=idx[n];if(!x)return;$('dp').innerHTML=card(x);document.querySelectorAll('.tbl tr').forEach(r=>r.classList.toggle('sel',r.dataset.n===String(n)))}
+let wasWide=wide();window.addEventListener('resize',()=>{if(wide()!==wasWide){wasWide=wide();if(L)tab(cur)}});
 async function go(){try{const r=await api('search',{q:$('q').value});sres=r.rows;HLS=r.hlSet||HLS;tab('s')}catch(e){alert(e.message)}}
 async function sync(){$('sy').disabled=true;$('sm').textContent='Updating from PostEx...';try{const r=await api('sync');$('sm').textContent='Tracking found: '+r.tracked+' | Status updated: '+r.updated;await loadLists();go()}catch(e){$('sm').textContent=e.message}$('sy').disabled=false}
 let hlBy='';
@@ -71,6 +90,7 @@ async function hlSave(){const n=$('hmn').value.trim();if(!n){alert('Please write
 async function hlRemove(){await hlOff('')}
 async function hlOff(by){try{await api('hlSet',{order:hlNo,on:false,by:by});$('hm').hidden=true;await refresh()}catch(e){alert(e.message)}}
 async function refresh(){await loadLists();if(cur==='s'&&sres.length){const r=await api('search',{q:$('q').value});sres=r.rows;HLS=r.hlSet||HLS}tab(cur)}
-try{user=sessionStorage.getItem('tu')||'';pin=sessionStorage.getItem('pin')||'';if(user&&pin){$('un').value=user;login()}}catch(e){}
+(function(){try{user=sessionStorage.getItem('tu')||'';pin=sessionStorage.getItem('pin')||'';if(!(user&&pin))return;$('un').value=user;let sn=null;try{sn=JSON.parse(localStorage.getItem(SNAP())||'null')}catch(e){}
+ if(sn&&sn.L){L=sn.L;HLS=L.hlSet||{};showApp();tab('s');$('upd').textContent='Saved '+stamp(sn.t);loadLists().then(()=>tab(cur)).catch(e=>{if(/PIN|name|login/i.test(e.message))logout()})}else login()}catch(e){}})();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

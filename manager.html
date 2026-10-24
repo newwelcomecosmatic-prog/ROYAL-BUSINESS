@@ -33,7 +33,7 @@ button.b.s{background:transparent;color:var(--pr);border:1px solid var(--pr)}but
 <div id="lg" class="c"><h2>Royal Business</h2><label>PIN</label><input id="pin" type="password" inputmode="numeric" onkeydown="if(event.key==='Enter')login()">
 <button class="b" onclick="login()">Open</button><div id="le" class="bd" style="margin-top:8px"></div></div>
 <div id="ap" hidden>
-<header><b>Royal Manager</b><nav id="nv"></nav><button class="lo" onclick="logout()">Log out</button></header>
+<header><b>Royal Manager</b><nav id="nv"></nav><button class="lo" id="rfp" onclick="rfp()" title="Get the latest data">&#8635; Refresh</button><button class="lo" onclick="logout()">Log out</button></header>
 <main>
 <div class="pg" id="p-bill"><div class="g">
 <div><div class="c"><h2>Customer</h2>
@@ -121,14 +121,14 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
 const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
 async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be in the repo root, next to the app folders.');if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
- let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
+ let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin,fresh:window.FRESH?1:0},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
  let j;try{j=JSON.parse(t)}catch(e){throw new Error('Server returned a web page instead of data. Check that the API URL ends with /exec and the Web App access is "Anyone", then redeploy.')}
  if(j.error)throw new Error(j.error);return j}
 function badge(s){s=String(s||'').trim();if(!s)return '<span class="bg">Not booked</span>';const c=/deliver(ed)?$/i.test(s)&&!/out/i.test(s)?'ok':/return|cancel|cancal|expire/i.test(s)?'bad':/out|picked|transit|dispatch/i.test(s)?'go':'wn';return '<span class="bg '+c+'">'+esc(s)+'</span>'}
 async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';
  try{const s=await api('state');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}}
 function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
-function nav(p){PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
+function nav(p){window.CUR=p;PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
  if(p==='orders')loadOrders();if(p==='rider'){loadRider();loadRiderAcct()}if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()}
 function init(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');
  $('pl').innerHTML=s.products.map(p=>{pr[p.n.toUpperCase()]=p.p;return '<option value="'+esc(p.n)+'">'}).join('');
@@ -227,5 +227,6 @@ async function riderDcSave(){try{await api('riderDc',{order:$('rdo').value,dc:$(
 async function loadRiderAcct(){try{const a=await api('riderAccount');$('ra1').textContent=money(a.earned);$('ra2').textContent=money(a.paid);$('ra3').textContent=money(a.bal);
  $('rpl').innerHTML=a.pays.map(x=>'<div class="cl"><span>'+esc(x.date)+(x.note?' &middot; '+esc(x.note):'')+'</span><b>'+money(x.amt)+'</b></div>').join('')}catch(e){}}
 async function rPay(){try{await api('riderPay',{amount:$('rpa').value,date:$('rpd').value,note:$('rpn').value});['rpa','rpn'].forEach(k=>$(k).value='');loadRiderAcct()}catch(e){alert(e.message)}}
+function rfp(){window.FRESH=1;const b=$('rfp');b.disabled=true;nav(window.CUR||'orders');setTimeout(()=>{window.FRESH=0;b.disabled=false},5000)}
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
 </script></body></html>
