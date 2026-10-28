@@ -4,8 +4,8 @@
  "start_url": "track.html",
  "scope": "./",
  "display": "standalone",
- "background_color": "#f2f4f8",
- "theme_color": "#1F4E78",
+ "background_color": "#F5F3FB",
+ "theme_color": "#6C47D9",
  "icons": [
   {
    "src": "icon-track-192.png",
@@ -18,6 +18,12 @@
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "any"
+  },
+  {
+   "src": "icon-track-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
   }
  ]
 }
