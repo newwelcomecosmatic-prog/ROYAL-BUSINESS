@@ -1,11 +1,15 @@
 {
  "name": "Royal Rider",
  "short_name": "Rider",
- "start_url": "rider.html",
- "scope": "./",
+ "description": "Scan parcels, update status, day report",
+ "id": "./rider.html",
+ "start_url": "./rider.html",
+ "scope": "./rider.html",
  "display": "standalone",
- "background_color": "#f2f4f8",
- "theme_color": "#1a7f37",
+ "orientation": "any",
+ "background_color": "#F5F3FB",
+ "theme_color": "#6C47D9",
+ "lang": "en",
  "icons": [
   {
    "src": "icon-rider-192.png",
@@ -18,6 +22,12 @@
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "any"
+  },
+  {
+   "src": "icon-rider-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
   }
  ]
 }

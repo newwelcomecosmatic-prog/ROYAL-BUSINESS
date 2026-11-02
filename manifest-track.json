@@ -1,11 +1,15 @@
 {
- "name": "Order Tracking",
- "short_name": "Track",
- "start_url": "track.html",
- "scope": "./",
+ "name": "Royal Order Tracking",
+ "short_name": "Tracking",
+ "description": "Track orders, status and customer history",
+ "id": "./track.html",
+ "start_url": "./track.html",
+ "scope": "./track.html",
  "display": "standalone",
+ "orientation": "any",
  "background_color": "#F5F3FB",
  "theme_color": "#6C47D9",
+ "lang": "en",
  "icons": [
   {
    "src": "icon-track-192.png",

@@ -1,11 +1,15 @@
 {
  "name": "Royal CEO",
  "short_name": "CEO",
- "start_url": "CEO.html",
- "scope": "./",
+ "description": "Overview and reports (view only)",
+ "id": "./CEO.html",
+ "start_url": "./CEO.html",
+ "scope": "./CEO.html",
  "display": "standalone",
- "background_color": "#f2f4f8",
- "theme_color": "#6a3fa0",
+ "orientation": "any",
+ "background_color": "#F5F3FB",
+ "theme_color": "#6C47D9",
+ "lang": "en",
  "icons": [
   {
    "src": "icon-ceo-192.png",
@@ -18,6 +22,12 @@
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "any"
+  },
+  {
+   "src": "icon-ceo-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
   }
  ]
 }
