@@ -128,6 +128,9 @@ html.emb [onclick="logout()"]{display:none!important}
 <div><div class="c"><h2>This month</h2><div class="r"><div><b class="ok">Cash in</b><div id="cbi"></div></div><div><b class="bd">Cash out</b><div id="cbo"></div></div></div></div>
 <div class="c sc"><h2>Recent expenses</h2><table class="tb"><tbody id="cel"></tbody></table></div>
 <div class="c sc"><h2>Recent payments received</h2><table class="tb"><tbody id="cpl"></tbody></table></div></div></div></div>
+<div class="pg" id="p-returns"><div class="c"><h2>Returned parcels waiting to come back</h2>
+<p class="mu">When a parcel is returned, stock is <b>not</b> added. The parcel reaches the warehouse about 10 to 15 days later. When it arrives, tap <b>Received in warehouse</b> (change the quantity if only some items came back). If it is lost or damaged, tap <b>Write off</b>.</p>
+<div class="r"><div><input id="rtq" placeholder="Find by order no or name" oninput="renderReturns()"></div><div><button class="b s" style="margin:0" onclick="loadReturns()">&#8635; Refresh</button></div></div><div id="rts" class="mu" style="margin-top:8px"></div></div><div id="rtl"></div></div>
 <div class="pg" id="p-rep"><div class="c" style="max-width:520px"><h2>Excel download</h2><div class="r"><div><label>From</label><input id="f" type="date"></div><div><label>To</label><input id="e" type="date"></div></div>
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
@@ -135,7 +138,7 @@ html.emb [onclick="logout()"]{display:none!important}
 <script>
 let pin='',pr={},dv='POSTEX',dvMan=0,ords=[];const $=i=>document.getElementById(i);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['cash','Cash'],['rep','Reports']];
+const PG=[['bill','Online Bill'],['orders','Orders'],['rider','Rider'],['party','Parties'],['vendor','Vendors'],['batch','Batches'],['stock','Stock'],['returns','Returns'],['cash','Cash'],['rep','Reports']];
 const money=n=>Number(n||0).toLocaleString('en-US');let rk='ONLINE',bals={party:[],vendor:[]};
 async function api(a,x){if(typeof API==='undefined')throw new Error('config.js did not load. It must be in the repo root, next to the app folders.');if(API.indexOf('PASTE_')>=0)throw new Error('API URL is not set in index.html (replace PASTE_WEB_APP_URL_HERE with your Web App /exec link).');
  let r,t;try{r=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({a,pin,fresh:window.FRESH?1:0},x||{}))});t=await r.text()}catch(e){throw new Error('Cannot reach server ('+e.message+'). Check internet and the URL in config.js.')}
@@ -146,7 +149,7 @@ async function login(){pin=$('pin').value.trim()||pin;$('le').textContent='';
  try{const s=await api('state');try{sessionStorage.setItem('pin',pin)}catch(e){}init(s)}catch(e){$('le').textContent=e.message}}
 function logout(){try{sessionStorage.removeItem('pin')}catch(e){}location.reload()}
 function nav(p){window.CUR=p;PG.forEach(x=>{$('p-'+x[0]).classList.toggle('on',x[0]===p);$('n-'+x[0]).classList.toggle('on',x[0]===p)});
- if(p==='orders')loadOrders();if(p==='rider'){loadRider();loadRiderAcct()}if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches()}
+ if(p==='orders')loadOrders();if(p==='rider'){loadRider();loadRiderAcct()}if(p==='stock')loadStock();if(p==='party')loadBals('party');if(p==='vendor')loadBals('vendor');if(p==='cash')loadCash();if(p==='batch')loadBatches();if(p==='returns')loadReturns()}
 function init(s){$('lg').hidden=true;$('ap').hidden=false;$('nv').innerHTML=PG.map(x=>'<button id="n-'+x[0]+'" onclick="nav(\''+x[0]+'\')">'+x[1]+'</button>').join('');
  $('pl').innerHTML=s.products.map(p=>{pr[p.n.toUpperCase()]=p.p;return '<option value="'+esc(p.n)+'">'}).join('');
  $('d').value=s.today;$('f').value=s.today.slice(0,8)+'01';$('e').value=s.today;$('no').value=s.next;$('tk').value=s.taker;$('dc').value=s.dc;
@@ -185,7 +188,7 @@ async function riderApply(){const n=[...document.querySelectorAll('.rc:checked')
  if(!n.length){alert('Select parcels or paste order numbers.');return}if(!confirm('Set '+n.length+' order(s) to '+$('rst').value+'?'))return;
  try{const r=await api('riderSet',{orders:n,status:$('rst').value});$('rm').innerHTML='<span class="ok">Updated: '+r.done+'</span>'+(r.skipped.length?'<br><span class="bd">Skipped: '+r.skipped.map(esc).join(', ')+'</span>':'');$('rn').value='';loadRider()}catch(e){alert(e.message)}}
 let stk=[];async function loadStock(){try{stk=(await api('stock')).rows;$('spl').innerHTML=stk.map(x=>'<option value="'+esc(x.n)+'">').join('');renderStock()}catch(e){alert(e.message)}}
-function renderStock(){const f=$('sf2').value.toLowerCase();$('sb').innerHTML=stk.filter(x=>String(x.n).toLowerCase().includes(f)).map(x=>'<tr><td>'+esc(x.n)+'</td><td><span class="bg '+(x.stock<=0?'bad':x.stock<=5?'wn':'ok')+'">'+x.stock+'</span></td></tr>').join('')}
+function renderStock(){const f=$('sf2').value.toLowerCase();$('sb').innerHTML=stk.filter(x=>String(x.n).toLowerCase().includes(f)).map(x=>'<tr><td>'+esc(x.n)+'</td><td><span class="bg '+(x.stock<=0?'bad':x.stock<=5?'wn':'ok')+'">'+x.stock+'</span>'+(x.ret?' <span class="mu">+'+x.ret+' returning</span>':'')+'</td></tr>').join('')}
 async function stockIn(){try{await api('stockIn',{product:$('sp').value,qty:$('sq').value,rate:$('sr').value,vendor:$('sv2').value,cash:$('scash').checked,note:$('sn').value,date:$('sd').value});['sp','sq','sr','sn','sv2'].forEach(k=>$(k).value='');$('scash').checked=false;loadStock()}catch(e){alert(e.message)}}
 async function addProd(){try{await api('addProduct',{name:$('np').value,opening:$('no2').value,cost:$('nc').value});['np','no2','nc'].forEach(k=>$(k).value='');loadStock()}catch(e){alert(e.message)}}
 async function dl(){$('dl').disabled=true;$('dl').textContent='Preparing...';
@@ -245,6 +248,16 @@ async function loadRiderAcct(){try{const a=await api('riderAccount');$('ra1').te
  $('rpl').innerHTML=a.pays.map(x=>'<div class="cl"><span>'+esc(x.date)+(x.note?' &middot; '+esc(x.note):'')+'</span><b>'+money(x.amt)+'</b></div>').join('')}catch(e){}}
 async function rPay(){try{await api('riderPay',{amount:$('rpa').value,date:$('rpd').value,note:$('rpn').value});['rpa','rpn'].forEach(k=>$(k).value='');loadRiderAcct()}catch(e){alert(e.message)}}
 function rfp(){window.FRESH=1;const b=$('rfp');b.disabled=true;nav(window.CUR||'orders');setTimeout(()=>{window.FRESH=0;b.disabled=false},5000)}
+
+let rtn=[];
+async function loadReturns(){try{const r=await api('returns');rtn=r.rows;const u=Object.keys(r.units||{}).length;$('rts').textContent=r.total?r.total+' parcel'+(r.total>1?'s':'')+' waiting to come back':'';renderReturns()}catch(e){alert(e.message)}}
+function renderReturns(){const f=$('rtq').value.trim().toLowerCase();const a=rtn.filter(x=>!f||String(x.no).indexOf(f)>=0||String(x.name).toLowerCase().indexOf(f)>=0);
+ $('rtl').innerHTML=a.map(x=>'<div class="c"><div class="r" style="justify-content:space-between"><b>#'+x.no+' '+esc(x.name)+'</b><span class="bg '+(x.days>=15?'bad':x.days>=10?'wn':'go')+'" style="flex:none">'+x.days+' days</span></div><div class="mu">'+esc(x.status)+' &middot; '+esc(x.city)+' &middot; since '+esc(x.since||'-')+' &middot; '+(x.delivery==='RIDER'?'Rider':'Courier')+'</div>'+
+  x.items.map((i,k)=>'<div class="cl"><span>'+esc(i.p)+' <span class="mu">sent '+i.q+'</span></span><span style="width:90px"><input type="number" inputmode="decimal" id="rq_'+x.no+'_'+k+'" value="'+i.q+'"></span></div>').join('')+
+  '<div class="r"><button class="b" data-n="'+x.no+'" onclick="retDo(this.dataset.n,\'RECEIVED\')">Received in warehouse</button><button class="b s" data-n="'+x.no+'" onclick="retDo(this.dataset.n,\'WRITEOFF\')">Write off</button></div></div>').join('')||'<div class="c mu">No returned parcels are waiting.</div>'}
+async function retDo(no,res){const x=rtn.find(r=>String(r.no)===String(no));if(!x)return;const items=x.items.map((i,k)=>({p:i.p,q:+$('rq_'+x.no+'_'+k).value||0}));
+ if(res==='WRITEOFF'&&!confirm('Write off #'+no+'? Stock will NOT be added.'))return;
+ try{const r=await api('returnReceive',{items:[{no:no,result:res,items:items}]});if(!r.done&&r.skipped.length)alert(r.skipped.join('\n'));loadReturns()}catch(e){alert(e.message)}}
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
 </script><script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){})</script>
 </body></html>
