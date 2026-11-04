@@ -1,0 +1,33 @@
+{
+ "name": "Royal Returns",
+ "short_name": "Returns",
+ "description": "Scan returned parcels and check the products",
+ "id": "./returns.html",
+ "start_url": "./returns.html",
+ "scope": "./returns.html",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#F5F3FB",
+ "theme_color": "#6C47D9",
+ "lang": "en",
+ "icons": [
+  {
+   "src": "icon-returns-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-returns-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-returns-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

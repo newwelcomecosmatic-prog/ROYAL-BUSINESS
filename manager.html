@@ -128,9 +128,9 @@ html.emb [onclick="logout()"]{display:none!important}
 <div><div class="c"><h2>This month</h2><div class="r"><div><b class="ok">Cash in</b><div id="cbi"></div></div><div><b class="bd">Cash out</b><div id="cbo"></div></div></div></div>
 <div class="c sc"><h2>Recent expenses</h2><table class="tb"><tbody id="cel"></tbody></table></div>
 <div class="c sc"><h2>Recent payments received</h2><table class="tb"><tbody id="cpl"></tbody></table></div></div></div></div>
-<div class="pg" id="p-returns"><div class="c"><h2>Returned parcels waiting to come back</h2>
+<div class="pg" id="p-returns"><div id="apq"></div><div class="c"><h2>Returned parcels waiting to come back</h2>
 <p class="mu">When a parcel is returned, stock is <b>not</b> added. The parcel reaches the warehouse about 10 to 15 days later. When it arrives, tap <b>Received in warehouse</b> (change the quantity if only some items came back). If it is lost or damaged, tap <b>Write off</b>.</p>
-<div class="r"><div><input id="rtq" placeholder="Find by order no or name" oninput="renderReturns()"></div><div><button class="b s" style="margin:0" onclick="loadReturns()">&#8635; Refresh</button></div></div><div id="rts" class="mu" style="margin-top:8px"></div></div><div id="rtl"></div></div>
+<div class="r"><div><input id="rtq" placeholder="Find by order no or name" oninput="renderReturns()"></div><div><button class="b s" style="margin:0" onclick="loadReturns()">&#8635; Refresh</button></div></div><div id="rts" class="mu" style="margin-top:8px"></div></div><div id="rtl"></div><div id="lgc"></div></div>
 <div class="pg" id="p-rep"><div class="c" style="max-width:520px"><h2>Excel download</h2><div class="r"><div><label>From</label><input id="f" type="date"></div><div><label>To</label><input id="e" type="date"></div></div>
 <button class="b" id="dl" onclick="dl()">Download Excel</button><p class="mu">Sheet1 (with TOTAL QTY, status, tracking) and All Orders Data (with TOTAL UNITS; a deal counts as the sum of its products).</p></div></div>
 </main></div>
@@ -249,8 +249,8 @@ async function loadRiderAcct(){try{const a=await api('riderAccount');$('ra1').te
 async function rPay(){try{await api('riderPay',{amount:$('rpa').value,date:$('rpd').value,note:$('rpn').value});['rpa','rpn'].forEach(k=>$(k).value='');loadRiderAcct()}catch(e){alert(e.message)}}
 function rfp(){window.FRESH=1;const b=$('rfp');b.disabled=true;nav(window.CUR||'orders');setTimeout(()=>{window.FRESH=0;b.disabled=false},5000)}
 
-let rtn=[];
-async function loadReturns(){try{const r=await api('returns');rtn=r.rows;const u=Object.keys(r.units||{}).length;$('rts').textContent=r.total?r.total+' parcel'+(r.total>1?'s':'')+' waiting to come back':'';renderReturns()}catch(e){alert(e.message)}}
+let rtn=[],apv=[],lgy=[];
+async function loadReturns(){try{const [r,p,l]=await Promise.all([api('returns'),api('retPending'),api('retLegacy')]);rtn=r.rows;apv=p.rows;lgy=l.rows;$('rts').textContent=r.total?r.total+' parcel'+(r.total>1?'s':'')+' waiting to come back':'';renderApprovals();renderReturns();renderLegacy()}catch(e){alert(e.message)}}
 function renderReturns(){const f=$('rtq').value.trim().toLowerCase();const a=rtn.filter(x=>!f||String(x.no).indexOf(f)>=0||String(x.name).toLowerCase().indexOf(f)>=0);
  $('rtl').innerHTML=a.map(x=>'<div class="c"><div class="r" style="justify-content:space-between"><b>#'+x.no+' '+esc(x.name)+'</b><span class="bg '+(x.days>=15?'bad':x.days>=10?'wn':'go')+'" style="flex:none">'+x.days+' days</span></div><div class="mu">'+esc(x.status)+' &middot; '+esc(x.city)+' &middot; since '+esc(x.since||'-')+' &middot; '+(x.delivery==='RIDER'?'Rider':'Courier')+'</div>'+
   x.items.map((i,k)=>'<div class="cl"><span>'+esc(i.p)+' <span class="mu">sent '+i.q+'</span></span><span style="width:90px"><input type="number" inputmode="decimal" id="rq_'+x.no+'_'+k+'" value="'+i.q+'"></span></div>').join('')+
@@ -258,6 +258,19 @@ function renderReturns(){const f=$('rtq').value.trim().toLowerCase();const a=rtn
 async function retDo(no,res){const x=rtn.find(r=>String(r.no)===String(no));if(!x)return;const items=x.items.map((i,k)=>({p:i.p,q:+$('rq_'+x.no+'_'+k).value||0}));
  if(res==='WRITEOFF'&&!confirm('Write off #'+no+'? Stock will NOT be added.'))return;
  try{const r=await api('returnReceive',{items:[{no:no,result:res,items:items}]});if(!r.done&&r.skipped.length)alert(r.skipped.join('\n'));loadReturns()}catch(e){alert(e.message)}}
+
+function renderApprovals(){$('apq').innerHTML=apv.length?'<h2 style="margin:6px 2px 8px">Waiting for your approval ('+apv.length+')</h2>'+apv.map(s=>{const leg=s.kind==='LEGACY';let g=0,d=0,m=0;s.items.forEach(i=>{if(!i.shop){g+=i.good;d+=i.damaged;m+=i.missing}});
+ return '<div class="c"><div class="r" style="justify-content:space-between"><b>#'+s.no+' '+esc(s.name)+'</b><span class="bg '+(leg?'wn':'go')+'" style="flex:none">'+(leg?'Stock added earlier':'New return')+'</span></div><div class="mu">'+esc(s.city)+' &middot; scanned by '+esc(s.by)+' &middot; '+esc(s.time)+(s.early?' &middot; <b style="color:var(--wn)">order status is "'+esc(s.orderStatus||'-')+'"</b>':'')+'</div>'+
+ '<table class="tb" style="margin-top:6px"><thead><tr><th>Product</th><th>Sent</th><th>Usable</th><th>Damaged</th><th>Missing</th></tr></thead><tbody>'+s.items.map(i=>'<tr><td>'+esc(i.p)+(i.shop?' <span class="mu">(shop item)</span>':'')+'</td><td>'+i.sent+'</td><td><b class="ok">'+i.good+'</b></td><td><b class="bd">'+i.damaged+'</b></td><td><b style="color:var(--wn)">'+i.missing+'</b></td></tr>').join('')+'</tbody></table>'+
+ (s.note?'<div class="mu" style="margin-top:6px">Note: '+esc(s.note)+'</div>':'')+
+ '<div class="mu" style="margin-top:6px">'+(leg?'On approval: stock goes <b>down by '+(d+m)+'</b> (damaged + missing). Usable units are already in stock.':'On approval: stock goes <b>up by '+g+'</b> (usable only). Damaged and missing are not added.')+' Shop items are only recorded.</div>'+
+ '<div class="r"><button class="b" data-s="'+esc(s.scan)+'" onclick="apDo(this.dataset.s,1)">Approve</button><button class="b s" data-s="'+esc(s.scan)+'" onclick="apDo(this.dataset.s,0)">Reject</button></div></div>'}).join(''):''}
+async function apDo(scan,ok){let note='';if(!ok){note=prompt('Why are you rejecting this scan? (the team will scan it again)');if(note===null)return}else if(!confirm('Approve this scan and update stock?'))return;
+ try{await api(ok?'retApprove':'retReject',{scan:scan,note:note});loadReturns()}catch(e){alert(e.message)}}
+function renderLegacy(){$('lgc').innerHTML=lgy.length?'<h2 style="margin:18px 2px 4px">Stock was added earlier, parcel not received yet ('+lgy.length+')</h2><p class="mu" style="margin:0 2px 8px">These returns were added to stock automatically by the old system. When the parcel really arrives, the team scans it and you approve it above. If a parcel will never come back, tap <b>Will not come back</b> to take its units off stock again.</p>'+
+ lgy.map(x=>'<div class="c"><div class="r" style="justify-content:space-between"><b>#'+x.no+' '+esc(x.name)+'</b><span class="bg '+(x.days>=30?'bad':x.days>=15?'wn':'go')+'" style="flex:none">'+x.days+' days</span></div><div class="mu">'+esc(x.city)+' &middot; stock added on '+esc(x.since||'-')+'</div>'+x.items.map(i=>'<div class="cl"><span>'+esc(i.p)+'</span><b>'+i.q+'</b></div>').join('')+
+  '<button class="b s" data-n="'+x.no+'" onclick="lgOff(this.dataset.n)">Will not come back (remove from stock)</button></div>').join(''):''}
+async function lgOff(no){if(!confirm('Remove the units of #'+no+' from stock? Do this only if the parcel will never come back.'))return;try{await api('retLegacyOff',{orders:[no]});loadReturns()}catch(e){alert(e.message)}}
 try{pin=sessionStorage.getItem('pin')||'';if(pin)login()}catch(e){}
 </script><script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){})</script>
 </body></html>
